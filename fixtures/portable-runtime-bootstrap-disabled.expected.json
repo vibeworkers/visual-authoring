@@ -1,0 +1,5 @@
+{
+  "status": "blocked_missing_python",
+  "auto_install_attempted": false,
+  "reason": "Python 3.9 or later is required and automatic installation is disabled"
+}

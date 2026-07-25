@@ -1,0 +1,28 @@
+{
+  "schema_version": "visual-authoring.essay-grammar.v1",
+  "corpus_id": "conversation-derived-visual-authoring",
+  "source_role": "conversation_corpus_reference",
+  "sample_sources": [
+    {"id": "entry-question", "source_path": "source-01-entry-question.md", "title": "시작의 긴장과 탐색 질문", "observed_roles": ["entry_tension", "exploration_question"]},
+    {"id": "context-shift", "source_path": "source-02-context-shift.md", "title": "맥락 연결과 관점 이동", "observed_roles": ["context_bridge", "thought_shift"]},
+    {"id": "open-end", "source_path": "source-03-open-end.md", "title": "열린 끝", "observed_roles": ["open_end"]}
+  ],
+  "observed_flow": ["entry_tension", "exploration_question", "context_bridge", "thought_shift", "open_end"],
+  "non_claims": ["not_official_brunch_platform_grammar", "not_a_human_outcome_claim", "not_a_clinical_assessment", "not_empirical_theory_validation"],
+  "provenance": {
+    "source_kind": "conversation_and_local_artifacts",
+    "accessible_surfaces": ["current_conversation", "codex_memory_summary", "local_project_artifacts"],
+    "unavailable_surfaces": ["claude_raw_session_transcript"],
+    "transformation": "paraphrase_and_observation_not_verbatim_transcript",
+    "source_boundary": "Use current conversation and accessible local artifacts only; do not infer unavailable speaker intent."
+  },
+  "theory_validation": [
+    {"lens": "linguistics", "observation": "A repair question asks what the placeholder files were for after a validation gap was found.", "bounded_interpretation": "The sequence is a discourse move from unresolved reference to explicit role naming.", "not_claim": "It is not a universal grammar or proof of author intent."},
+    {"lens": "counseling_psychology", "observation": "The question is clarified without assigning a personal deficit or diagnosis.", "bounded_interpretation": "A reflective, non-pathologizing clarification stance is appropriate for the wording.", "not_claim": "It is not a clinical assessment or evidence of therapeutic effect."},
+    {"lens": "coaching", "observation": "The work moves from a concrete gap to a next decision about names, files, and validation.", "bounded_interpretation": "Goal-gap-next-action sequencing can make the material more executable.", "not_claim": "It does not prove commitment, readiness, or coaching success."},
+    {"lens": "behavior_change", "observation": "The proposed follow-up is specific: rename the files, add source text, and rerun the validator.", "bounded_interpretation": "Specific action cues and feedback can support implementation planning.", "not_claim": "No behavior change or reuse rate has been measured."},
+    {"lens": "symbolic_systems", "observation": "A filename such as source-01-entry-question acts as a visible semantic index.", "bounded_interpretation": "The symbol reduces ambiguity by binding the artifact to its observed discourse role.", "not_claim": "The symbol does not carry a fixed psychological meaning."},
+    {"lens": "cognitive_science", "observation": "Role-bearing names reduce search and recall demands when a reviewer scans the fixture.", "bounded_interpretation": "Semantic cueing and externalized structure can reduce local retrieval load.", "not_claim": "This does not prove human comprehension, learning, or transfer."}
+  ],
+  "target_adaptation": {"target_surface": "web", "preserve": ["inquiry", "role visibility"], "transfer": ["reading rhythm", "explicit next action"], "discard": ["platform chrome", "unavailable-session assumptions"], "open_end_policy": "Leave the next verification question open and keep any CTA or implementation command separate."}
+}

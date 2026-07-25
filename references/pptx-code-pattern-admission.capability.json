@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "capability_id": "pptx-code-pattern-and-reader-admission",
+  "control_model": "fixed_code_orchestrates_flexible_decisions",
+  "required_layers": ["prompt", "reference", "code", "eval"],
+  "prompt_markers": [
+    "PPTX Code-Pattern and Reader-Admission Gate",
+    "fixed_code_orchestrates_flexible_decisions"
+  ],
+  "reference_files": [
+    {
+      "path": "references/pptx-code-pattern-admission.md",
+      "markers": ["Four-layer pattern catalog", "Reader-public admission", "Evidence ledgers"]
+    },
+    {
+      "path": "references/reader-surface-admission-policy.example.json",
+      "markers": ["single_gateway_calls", "forbidden_patterns"]
+    }
+  ],
+  "code_files": [
+    {
+      "path": "scripts/validate_pptx_code_pattern_catalog.py",
+      "markers": ["fixed_code_control_model", "four_evidence_ledgers"]
+    },
+    {
+      "path": "scripts/reader_surface_admission.mjs",
+      "markers": ["assertReaderSurfaceAdmission", "raw_gateway_bypass"]
+    },
+    {
+      "path": "scripts/validate_pptx_pattern_compiler_manifest.py",
+      "markers": ["recovery_lineage_policy", "evidence_ledgers"]
+    },
+    {
+      "path": "scripts/audit_pptx_native_objects.py",
+      "markers": ["connector_target_ids", "required_relation_coverage", "critical_read_order_mismatch_count"]
+    }
+  ],
+  "eval_files": [
+    {
+      "path": "evals/evals.json",
+      "markers": ["trigger-pptx-code-pattern-admission", "negative-pptx-no-catalog"]
+    }
+  ],
+  "forbidden_flexible_decisions": [
+    "raw_ooxml",
+    "validation_status_override",
+    "gateway_bypass",
+    "evidence_ledger_status_override"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "capability_id": "author-corpus-essay-grammar",
+  "control_model": "fixed_code_orchestrates_flexible_decisions",
+  "required_layers": ["prompt", "reference", "code", "eval"],
+  "prompt_markers": ["코퍼스 기반 에세이 문법 모듈", "essay-grammar-packet"],
+  "reference_files": [{"path": "references/author-corpus-essay-grammar.md", "markers": ["Observation roles", "Prompt / reference / code boundary", "official platform style"]}],
+  "code_files": [{"path": "scripts/validate_essay_grammar_packet.py", "markers": ["REQUIRED_NON_CLAIMS", "author_corpus_reference", "This verifies packet structure"]}],
+  "eval_files": [{"path": "fixtures/essay-grammar-valid.json", "markers": ["not_official_brunch_platform_grammar", "not_a_human_outcome_claim"]}, {"path": "fixtures/essay-grammar-invalid-platform-claim.json", "markers": ["not_a_human_outcome_claim"]}],
+  "forbidden_flexible_decisions": ["raw_ooxml", "validation_status_override", "gateway_bypass", "evidence_ledger_status_override"]
+}

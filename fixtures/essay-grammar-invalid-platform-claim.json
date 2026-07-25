@@ -1,0 +1,13 @@
+{
+  "schema_version": "visual-authoring.essay-grammar.v1",
+  "corpus_id": "fixture-author",
+  "source_role": "author_corpus_reference",
+  "sample_sources": [
+    {"id": "entry-tension", "source_path": "source-01-entry-tension.md", "title": "시작의 긴장", "observed_roles": ["entry_tension"]},
+    {"id": "context-bridge", "source_path": "source-02-context-bridge.md", "title": "맥락 연결", "observed_roles": ["context_bridge"]},
+    {"id": "open-end", "source_path": "source-03-open-end.md", "title": "열린 끝", "observed_roles": ["open_end"]}
+  ],
+  "observed_flow": ["entry_tension", "context_bridge", "open_end"],
+  "non_claims": ["not_a_human_outcome_claim"],
+  "target_adaptation": {"target_surface": "web", "preserve": [], "transfer": [], "discard": [], "open_end_policy": "Open."}
+}

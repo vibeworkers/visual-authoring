@@ -1,0 +1,55 @@
+{
+  "schema_version": "visual-authoring.decision-preview.v1",
+  "goal_confirmation": {
+    "status": "draft",
+    "goal": "",
+    "audience": "",
+    "output_surface": "",
+    "success_condition": "",
+    "confirmed_by": ""
+  },
+  "source_continuity": {
+    "existing_work": "present",
+    "choice": "continue_improve"
+  },
+  "progress": {
+    "display_mode": "plain_text",
+    "closed_phases": ["phase_0"],
+    "current_phase": "phase_3"
+  },
+  "strategy_selection": {
+    "status": "user_selected",
+    "required_surface_ids": ["primary", "action"],
+    "candidates": [
+      {
+        "id": "shortcut",
+        "concept_preview_type": "moodboard",
+        "concept_preview_path": "decision-preview/editorial-concept.svg",
+        "target_surface_preview_path": "decision-preview/editorial-ui.svg",
+        "covered_surface_ids": ["primary"]
+      }
+    ],
+    "selected_id": "shortcut"
+  },
+  "color_selection": {
+    "status": "user_selected",
+    "hci_criteria": ["contrast"],
+    "required_surface_ids": ["primary", "action"],
+    "options": [
+      {
+        "id": "chips-only",
+        "complete_surface_preview_path": "decision-preview/warm-neutral-ui.svg",
+        "covered_surface_ids": ["primary"]
+      }
+    ],
+    "selected_id": "chips-only"
+  },
+  "release_credit": {
+    "release_stage": "pre_release",
+    "choice": "custom_credit"
+  },
+  "human_feedback": {
+    "mode": "off",
+    "questionnaire_reference": "references/user-decision-and-feedback.md#future-human-feedback-question-bank"
+  }
+}

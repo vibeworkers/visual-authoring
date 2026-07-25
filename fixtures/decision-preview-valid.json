@@ -1,0 +1,98 @@
+{
+  "schema_version": "visual-authoring.decision-preview.v1",
+  "goal_confirmation": {
+    "status": "confirmed",
+    "goal": "교육 등록 화면을 시각화한다",
+    "audience": "처음 참여하는 학습자",
+    "output_surface": "html",
+    "success_condition": "사용자 선택이 반영된 화면 설계를 인계한다",
+    "confirmed_by": "requester"
+  },
+  "source_continuity": {
+    "existing_work": "present",
+    "choice": "continue_improve",
+    "confirmed_by": "requester"
+  },
+  "progress": {
+    "display_mode": "step_by_step_progress_bar",
+    "closed_phases": ["phase_0", "phase_1", "phase_2"],
+    "current_phase": "phase_3"
+  },
+  "strategy_selection": {
+    "status": "user_selected",
+    "required_surface_ids": ["primary", "action", "status"],
+    "candidates": [
+      {
+        "id": "editorial",
+        "concept_preview_type": "image_generated",
+        "concept_preview_path": "decision-preview/editorial-concept.svg",
+        "target_surface_preview_path": "decision-preview/editorial-ui.svg",
+        "covered_surface_ids": ["primary", "action", "status"]
+      },
+      {
+        "id": "operational",
+        "concept_preview_type": "image_generated",
+        "concept_preview_path": "decision-preview/operational-concept.svg",
+        "target_surface_preview_path": "decision-preview/operational-ui.svg",
+        "covered_surface_ids": ["primary", "action", "status"]
+      }
+    ],
+    "selected_id": "editorial",
+    "confirmed_by": "requester"
+  },
+  "color_selection": {
+    "status": "user_selected",
+    "hci_criteria": ["contrast", "legibility", "attention_hierarchy", "state_semantics", "color_vision", "tone"],
+    "required_surface_ids": ["primary", "action", "status"],
+    "options": [
+      {
+        "id": "warm-neutral",
+        "complete_surface_preview_path": "decision-preview/warm-neutral-ui.svg",
+        "covered_surface_ids": ["primary", "action", "status"]
+      },
+      {
+        "id": "cool-contrast",
+        "complete_surface_preview_path": "decision-preview/cool-contrast-ui.svg",
+        "covered_surface_ids": ["primary", "action", "status"]
+      }
+    ],
+    "selected_id": "warm-neutral",
+    "confirmed_by": "requester"
+  },
+  "tooling_implementation": {
+    "status": "implemented",
+    "adapters": [
+      {
+        "capability": "concept_image",
+        "adapter": "imagegen",
+        "implementation": "tool_call",
+        "evidence_paths": ["decision-preview/editorial-concept.svg"]
+      },
+      {
+        "capability": "target_surface_render",
+        "adapter": "code_renderer",
+        "implementation": "code",
+        "evidence_paths": ["decision-preview/editorial-ui.svg"]
+      },
+      {
+        "capability": "web_surface_inspection",
+        "adapter": "portable_visual_runtime",
+        "implementation": "code",
+        "url": "http://localhost:3000",
+        "evidence_paths": ["decision-preview/warm-neutral-ui.svg"],
+        "assertions": ["primary-visible", "action-visible", "status-visible"]
+      }
+    ]
+  },
+  "release_credit": {
+    "release_stage": "pre_release",
+    "choice": "custom_credit",
+    "credit_text": "저자: Example",
+    "placement": "colophon",
+    "confirmed_by": "requester"
+  },
+  "human_feedback": {
+    "mode": "off",
+    "questionnaire_reference": "references/user-decision-and-feedback.md#future-human-feedback-question-bank"
+  }
+}

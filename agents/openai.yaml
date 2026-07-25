@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Authoring"
+  short_description: "Fixed-system, scene-centered visuals with proof-safe reflow"
+  default_prompt: "Use $visual-authoring to create a scene-centered visual artifact with an artifact-level design-system lock, open visual materiality, deterministic meaning layers, intentional native-medium implementation, localization reflow, and evidence-separated release verification."

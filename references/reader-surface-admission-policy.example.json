@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "artifact_id": "replace-with-artifact-id",
+  "target_medium": "powerpoint",
+  "surface": "reader_public",
+  "source_policy": {
+    "exclude_spec_fields": ["id", "kind", "hidden", "note", "transition", "evidence"],
+    "require_registered_visible_text": true,
+    "single_gateway_calls": {
+      "slide.addText": 1,
+      "slide.addTable": 1,
+      "slide.addImage": 1,
+      "slide.addNotes": 1,
+      "slide.addShape": 1,
+      "pptx.addSection": 1
+    }
+  },
+  "reader_copy_policy": {
+    "require_hangul_kicker": true,
+    "allow_domain_terms": ["AI", "LLM"],
+    "allow_brand_terms": [],
+    "allow_role_terms": [],
+    "allow_interface_terms": ["Q", "A"],
+    "forbidden_patterns": [
+      "\\b(?:fresh|candidate|pass_local|blocked_by_manual_action|OOXML|source[ _-]?family|compiler|emitter|validator|composition|recovery|lineage|manifest|native[ _-]?runtime)\\b",
+      "\\b(?:SYNTHETIC CASE|REVIEW STANDARD|LECTURE INTERPRETATION|OPTIONAL Q&A|RETURN TO ACTION|TIME FORM|INPUT STATE|AUTHORITY BOUNDARY|ROLE CONNECTION|HUMAN-OPERATED LOOP|SAME LOOP[ /]+DIFFERENT OPERATOR|ONE WORK[ /]+MANY LOCATIONS|CASE COMPLETION|DIAGNOSE[ /]+FIRST QUESTION|TRANSFER[ /]+BOUNDARY)\\b"
+    ],
+    "forbidden_literals": ["build/", "reviews/", "prompt ID", "validator ID", "release state"]
+  },
+  "claim_boundary": "이 정책은 독자 화면에 들어갈 문구의 분류·언어·내부 작업 언어 누출만 차단한다. 내용의 사실성, 학습 효과, PowerPoint native-open은 별도 게이트다."
+}

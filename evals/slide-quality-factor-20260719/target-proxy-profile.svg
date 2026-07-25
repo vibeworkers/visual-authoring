@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="764" viewBox="0 0 1180 764">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text { font-family: Arial, sans-serif; fill: #10233f; } .small { font-size: 13px; } .title { font-size: 20px; font-weight: 700; }</style>
+<text x="28" y="34" class="title">슬라이드 인지 프록시 — 덱 내부 상대 위치</text>
+<text x="28" y="60" class="small">점수는 절대 품질이 아니라 같은 덱 안의 구조적 관찰값 백분위입니다.</text>
+<text x="28" y="107" class="small">S01</text>
+<text x="240" y="90" class="small">focus</text>
+<rect x="240" y="95" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="95" width="195.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="107" class="small">0.59</text>
+<text x="670" y="90" class="small">headroom</text>
+<rect x="670" y="95" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="95" width="232.6" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="107" class="small">0.70</text>
+<text x="28" y="135" class="small">S02</text>
+<text x="240" y="118" class="small">focus</text>
+<rect x="240" y="123" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="123" width="130.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="135" class="small">0.39</text>
+<text x="670" y="118" class="small">headroom</text>
+<rect x="670" y="123" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="123" width="121.8" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="135" class="small">0.37</text>
+<text x="28" y="163" class="small">S03</text>
+<text x="240" y="146" class="small">focus</text>
+<rect x="240" y="151" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="151" width="222.4" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="163" class="small">0.67</text>
+<text x="670" y="146" class="small">headroom</text>
+<rect x="670" y="151" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="151" width="221.1" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="163" class="small">0.67</text>
+<text x="28" y="191" class="small">S04</text>
+<text x="240" y="174" class="small">focus</text>
+<rect x="240" y="179" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="179" width="197.3" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="191" class="small">0.60</text>
+<text x="670" y="174" class="small">headroom</text>
+<rect x="670" y="179" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="179" width="133.0" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="191" class="small">0.40</text>
+<text x="28" y="219" class="small">S05</text>
+<text x="240" y="202" class="small">focus</text>
+<rect x="240" y="207" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="207" width="130.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="219" class="small">0.39</text>
+<text x="670" y="202" class="small">headroom</text>
+<rect x="670" y="207" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="207" width="95.7" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="219" class="small">0.29</text>
+<text x="28" y="247" class="small">S06</text>
+<text x="240" y="230" class="small">focus</text>
+<rect x="240" y="235" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="235" width="62.4" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="247" class="small">0.19</text>
+<text x="670" y="230" class="small">headroom</text>
+<rect x="670" y="235" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="235" width="174.2" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="247" class="small">0.53</text>
+<text x="28" y="275" class="small">S07</text>
+<text x="240" y="258" class="small">focus</text>
+<rect x="240" y="263" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="263" width="132.7" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="275" class="small">0.40</text>
+<text x="670" y="258" class="small">headroom</text>
+<rect x="670" y="263" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="263" width="157.4" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="275" class="small">0.48</text>
+<text x="28" y="303" class="small">S08</text>
+<text x="240" y="286" class="small">focus</text>
+<rect x="240" y="291" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="291" width="235.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="303" class="small">0.71</text>
+<text x="670" y="286" class="small">headroom</text>
+<rect x="670" y="291" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="291" width="168.6" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="303" class="small">0.51</text>
+<text x="28" y="331" class="small">S09</text>
+<text x="240" y="314" class="small">focus</text>
+<rect x="240" y="319" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="319" width="72.6" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="331" class="small">0.22</text>
+<text x="670" y="314" class="small">headroom</text>
+<rect x="670" y="319" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="319" width="165.0" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="331" class="small">0.50</text>
+<text x="28" y="359" class="small">S10</text>
+<text x="240" y="342" class="small">focus</text>
+<rect x="240" y="347" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="347" width="204.9" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="359" class="small">0.62</text>
+<text x="670" y="342" class="small">headroom</text>
+<rect x="670" y="347" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="347" width="155.8" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="359" class="small">0.47</text>
+<text x="28" y="387" class="small">S11</text>
+<text x="240" y="370" class="small">focus</text>
+<rect x="240" y="375" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="375" width="215.2" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="387" class="small">0.65</text>
+<text x="670" y="370" class="small">headroom</text>
+<rect x="670" y="375" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="375" width="103.0" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="387" class="small">0.31</text>
+<text x="28" y="415" class="small">S12</text>
+<text x="240" y="398" class="small">focus</text>
+<rect x="240" y="403" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="403" width="230.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="415" class="small">0.70</text>
+<text x="670" y="398" class="small">headroom</text>
+<rect x="670" y="403" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="403" width="209.9" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="415" class="small">0.64</text>
+<text x="28" y="443" class="small">S13</text>
+<text x="240" y="426" class="small">focus</text>
+<rect x="240" y="431" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="431" width="207.6" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="443" class="small">0.63</text>
+<text x="670" y="426" class="small">headroom</text>
+<rect x="670" y="431" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="431" width="219.5" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="443" class="small">0.67</text>
+<text x="28" y="471" class="small">S14</text>
+<text x="240" y="454" class="small">focus</text>
+<rect x="240" y="459" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="459" width="215.2" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="471" class="small">0.65</text>
+<text x="670" y="454" class="small">headroom</text>
+<rect x="670" y="459" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="459" width="65.7" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="471" class="small">0.20</text>
+<text x="28" y="499" class="small">S15</text>
+<text x="240" y="482" class="small">focus</text>
+<rect x="240" y="487" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="487" width="235.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="499" class="small">0.71</text>
+<text x="670" y="482" class="small">headroom</text>
+<rect x="670" y="487" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="487" width="106.9" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="499" class="small">0.32</text>
+<text x="28" y="527" class="small">S16</text>
+<text x="240" y="510" class="small">focus</text>
+<rect x="240" y="515" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="515" width="255.1" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="527" class="small">0.77</text>
+<text x="670" y="510" class="small">headroom</text>
+<rect x="670" y="515" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="515" width="172.6" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="527" class="small">0.52</text>
+<text x="28" y="555" class="small">S17</text>
+<text x="240" y="538" class="small">focus</text>
+<rect x="240" y="543" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="543" width="112.5" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="555" class="small">0.34</text>
+<text x="670" y="538" class="small">headroom</text>
+<rect x="670" y="543" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="543" width="65.7" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="555" class="small">0.20</text>
+<text x="28" y="583" class="small">S18</text>
+<text x="240" y="566" class="small">focus</text>
+<rect x="240" y="571" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="571" width="160.0" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="583" class="small">0.48</text>
+<text x="670" y="566" class="small">headroom</text>
+<rect x="670" y="571" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="571" width="106.9" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="583" class="small">0.32</text>
+<text x="28" y="611" class="small">S19</text>
+<text x="240" y="594" class="small">focus</text>
+<rect x="240" y="599" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="599" width="127.4" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="611" class="small">0.39</text>
+<text x="670" y="594" class="small">headroom</text>
+<rect x="670" y="599" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="599" width="183.8" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="611" class="small">0.56</text>
+<text x="28" y="639" class="small">S20</text>
+<text x="240" y="622" class="small">focus</text>
+<rect x="240" y="627" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="627" width="82.5" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="639" class="small">0.25</text>
+<text x="670" y="622" class="small">headroom</text>
+<rect x="670" y="627" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="627" width="163.0" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="639" class="small">0.49</text>
+<text x="28" y="667" class="small">S21</text>
+<text x="240" y="650" class="small">focus</text>
+<rect x="240" y="655" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="655" width="77.5" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="667" class="small">0.23</text>
+<text x="670" y="650" class="small">headroom</text>
+<rect x="670" y="655" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="655" width="256.7" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="667" class="small">0.78</text>
+<text x="28" y="695" class="small">S22</text>
+<text x="240" y="678" class="small">focus</text>
+<rect x="240" y="683" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="683" width="207.6" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="695" class="small">0.63</text>
+<text x="670" y="678" class="small">headroom</text>
+<rect x="670" y="683" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="683" width="251.1" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="695" class="small">0.76</text>
+<text x="28" y="723" class="small">S23</text>
+<text x="240" y="706" class="small">focus</text>
+<rect x="240" y="711" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="240" y="711" width="87.5" height="14" rx="7" fill="#2457d6"/>
+<text x="580" y="723" class="small">0.27</text>
+<text x="670" y="706" class="small">headroom</text>
+<rect x="670" y="711" width="330" height="14" rx="7" fill="#e8edf5"/>
+<rect x="670" y="711" width="264.3" height="14" rx="7" fill="#0f8f6b"/>
+<text x="1010" y="723" class="small">0.80</text>
+</svg>

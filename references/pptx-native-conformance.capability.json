@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "capability_id": "pptx-native-conformance-and-source-level-self-remediation",
+  "control_model": "fixed_code_orchestrates_flexible_decisions",
+  "required_layers": ["prompt", "reference", "code", "eval"],
+  "prompt_markers": [
+    "PowerPoint Native Conformance and Source-Level Self-Remediation Gate",
+    "source-level self-remediation"
+  ],
+  "reference_files": [
+    {
+      "path": "references/pptx-native-conformance-and-self-remediation.md",
+      "markers": [
+        "PowerPoint Capability Decision Catalog",
+        "Source-Level Self-Remediation",
+        "automatic_powerpoint",
+        "Pretendard"
+      ]
+    }
+  ],
+  "code_files": [
+    {
+      "path": "scripts/validate_pptx_native_conformance.py",
+      "markers": [
+        "CORE_CAPABILITIES",
+        "source_mutation_only",
+        "PPTX_TEXT_VERTICAL_ALIGNMENT",
+        "--self-test"
+      ]
+    }
+  ],
+  "eval_files": [
+    {
+      "path": "evals/evals.json",
+      "markers": [
+        "trigger-pptx-native-conformance-self-remediation",
+        "negative-pptx-manual-page-number"
+      ]
+    }
+  ],
+  "forbidden_flexible_decisions": [
+    "raw_ooxml",
+    "validation_status_override",
+    "gateway_bypass",
+    "evidence_ledger_status_override"
+  ]
+}

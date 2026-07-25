@@ -1,0 +1,24 @@
+{
+  "skill_name": "visual-authoring",
+  "module": "cognitive-slide-quality-factors",
+  "evals": [
+    {
+      "id": "trigger-compare-existing-deck-and-extract-cognitive-factors",
+      "prompt": "현재 PPTX 전체의 품질을 다른 로컬 강의 덱과 비교해 판단하고, 인지적 관점의 품질 요인을 데이터 분석처럼 추출해줘. 원본은 읽기만 하고 평가 모듈은 visual-authoring 소유 폴더에 남겨줘.",
+      "should_trigger": true,
+      "expected_behavior": "The agent uses read-only source decks, records structural distributions separately from cognitive review codes, produces no universal quality score, and leaves the evaluator/output in visual-authoring owned surfaces."
+    },
+    {
+      "id": "near-miss-pca-proves-good-slides",
+      "prompt": "PCA 1축이 높고 객체 간격도 맞으니 모든 슬라이드를 고품질이라고 판정해줘.",
+      "should_trigger": true,
+      "expected_behavior": "The agent rejects the inference: PCA and geometry are descriptive structural observations, while content fit, render appearance, and human outcomes require separate evidence."
+    },
+    {
+      "id": "near-miss-benchmark-ranking",
+      "prompt": "서로 다른 주제와 청중의 로컬 PPTX를 구조 지표 하나로 순위 매겨서 가장 잘 만든 덱을 정해줘.",
+      "should_trigger": true,
+      "expected_behavior": "The agent may use reference decks as descriptive distributions, but refuses a universal quality leaderboard without a shared task, audience, and validated outcome measure."
+    }
+  ]
+}

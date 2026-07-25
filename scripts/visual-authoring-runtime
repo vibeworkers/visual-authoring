@@ -1,0 +1,91 @@
+#!/bin/sh
+# Portable launcher for visual-authoring's Python tools.
+# It installs Python only when it is missing and a known system package manager
+# is available. No arbitrary binary download URL is used.
+
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+MINIMUM_PYTHON_CHECK='import sys; raise SystemExit(0 if sys.version_info >= (3, 9) else 1)'
+
+find_python() {
+  if [ -n "${VISUAL_AUTHORING_PYTHON:-}" ]; then
+    if "$VISUAL_AUTHORING_PYTHON" -c "$MINIMUM_PYTHON_CHECK" >/dev/null 2>&1; then
+      printf '%s\n' "$VISUAL_AUTHORING_PYTHON"
+      return 0
+    fi
+    return 1
+  fi
+  for candidate in python3 python; do
+    if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c "$MINIMUM_PYTHON_CHECK" >/dev/null 2>&1; then
+      command -v "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+blocked() {
+  printf '%s\n' "{\"status\":\"blocked_missing_python\",\"auto_install_attempted\":$1,\"reason\":\"$2\"}" >&2
+  exit 1
+}
+
+install_python() {
+  case "$(uname -s 2>/dev/null || printf unknown)" in
+    Darwin)
+      if command -v brew >/dev/null 2>&1; then
+        brew install python
+        return
+      fi
+      blocked false "Homebrew is required for automatic Python installation on this macOS host"
+      ;;
+    Linux)
+      if command -v apt-get >/dev/null 2>&1; then
+        if [ "$(id -u)" -eq 0 ]; then
+          if ! apt-get update || ! apt-get install -y python3; then
+            blocked true "apt-get could not install Python 3"
+          fi
+        else
+          if ! command -v sudo >/dev/null 2>&1; then
+            blocked false "sudo is required to install Python 3 with apt-get"
+          fi
+          if ! sudo apt-get update || ! sudo apt-get install -y python3; then
+            blocked true "apt-get could not install Python 3"
+          fi
+        fi
+        return
+      fi
+      if command -v dnf >/dev/null 2>&1; then dnf install -y python3; return; fi
+      if command -v yum >/dev/null 2>&1; then yum install -y python3; return; fi
+      if command -v pacman >/dev/null 2>&1; then pacman -Sy --noconfirm python; return; fi
+      if command -v apk >/dev/null 2>&1; then apk add --no-cache python3; return; fi
+      blocked false "No supported Linux package manager was found"
+      ;;
+    *)
+      blocked false "This launcher supports macOS and Linux; use visual-authoring-runtime.cmd on Windows"
+      ;;
+  esac
+}
+
+PYTHON_BIN=$(find_python || true)
+if [ -z "$PYTHON_BIN" ]; then
+  if [ "${VISUAL_AUTHORING_AUTO_INSTALL_PYTHON:-1}" = "0" ]; then
+    blocked false "Python 3.9 or later is required and automatic installation is disabled"
+  fi
+  install_python
+  PYTHON_BIN=$(find_python || true)
+  if [ -z "$PYTHON_BIN" ]; then
+    blocked true "Python installation finished without a discoverable Python 3.9 or later command"
+  fi
+fi
+
+if [ "${1:-}" = "run" ]; then
+  shift
+  if [ "$#" -eq 0 ]; then
+    printf '%s\n' "usage: visual-authoring-runtime run <python-script> [args...]" >&2
+    exit 2
+  fi
+  exec "$PYTHON_BIN" "$@"
+fi
+
+exec "$PYTHON_BIN" "$SCRIPT_DIR/portable_visual_runtime.py" "$@"

@@ -1,0 +1,93 @@
+{
+  "capability_id": "user-decision-comparative-preview-and-feedback",
+  "control_model": "fixed_code_orchestrates_flexible_decisions",
+  "required_layers": ["prompt", "reference", "code", "eval"],
+  "forbidden_flexible_decisions": [
+    "raw_ooxml",
+    "validation_status_override",
+    "gateway_bypass",
+    "evidence_ledger_status_override"
+  ],
+  "prompt_markers": [
+    "User Decision, Comparative Preview, and Progress Gate",
+    "Step by Step"
+  ],
+  "reference_files": [
+    {
+      "path": "references/user-decision-and-feedback.md",
+      "markers": [
+        "Decision packet contract",
+        "Comparative preview rules",
+        "Future human-feedback question bank"
+      ]
+    },
+    {
+      "path": "references/tool-runtime-implementation.md",
+      "markers": [
+        "Required adapters",
+        "portable_visual_runtime",
+        "Portable browser execution",
+        "Browser runtime failure boundary",
+        "browser_runtime_failed"
+      ]
+    }
+  ],
+  "code_files": [
+    {
+      "path": "scripts/validate_visual_authoring_decision_packet.py",
+      "markers": [
+        "visual-authoring.decision-preview.v1",
+        "image_generated",
+        "portable_visual_runtime",
+        "This verifies decision-packet structure"
+      ]
+    },
+    {
+      "path": "scripts/portable_visual_runtime.py",
+      "markers": [
+        "Portable image conversion, browser capture, and dependency bootstrap adapter",
+        "capture_web",
+        "ensure_dependency",
+        "dependency_installation_required",
+        "installed_and_verified",
+        "BROWSER_EXECUTION_PROFILES",
+        "execute_browser_capture",
+        "browser_runtime_failed",
+        "dependencies_ready",
+        "self_test"
+      ]
+    },
+    {
+      "path": "scripts/visual-authoring-runtime",
+      "markers": [
+        "Portable launcher for visual-authoring's Python tools",
+        "VISUAL_AUTHORING_AUTO_INSTALL_PYTHON",
+        "blocked_missing_python"
+      ]
+    }
+  ],
+  "eval_files": [
+    {
+      "path": "fixtures/decision-preview-valid.json",
+      "markers": ["continue_improve", "step_by_step_progress_bar", "human_feedback"]
+    },
+    {
+      "path": "fixtures/decision-preview-invalid-bypass.json",
+      "markers": ["plain_text", "moodboard"]
+    },
+    {
+      "path": "fixtures/portable-runtime-bootstrap-disabled.expected.json",
+      "markers": ["blocked_missing_python", "auto_install_attempted"]
+    },
+    {
+      "path": "fixtures/portable-runtime-tool-installation.expected.json",
+      "markers": [
+        "dependency_installation_required",
+        "dependency_installation_unavailable",
+        "installed_and_verified",
+        "browser_runtime_failed",
+        "dependencies_ready"
+      ]
+    }
+  ]
+}

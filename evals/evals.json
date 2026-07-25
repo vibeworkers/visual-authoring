@@ -1,0 +1,264 @@
+{
+  "skill_name": "visual-authoring",
+  "evals": [
+    {
+      "id": "trigger-content-fit-first-slide-authoring",
+      "prompt": "이 강의안을 시각화해. 참고 PPT는 있지만 똑같이 만들 필요는 없고, 학습자가 비교와 실습 행동을 더 빨리 이해하게 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring full authoring loop",
+      "expected_output": "The agent starts from content task, semantic relationship, learner action, and evidence boundary; uses the reference diagnostically; and does not require one-to-one similarity unless faithful recreation is explicitly requested."
+    },
+    {
+      "id": "trigger-reference-faithful-recreation",
+      "prompt": "이 기준작을 1:1로 충실하게 재현해. 레이아웃과 시각 문법의 차이를 표로 비교하면서 맞춰줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring faithful recreation route",
+      "expected_output": "The agent classifies the source as baseline_to_recreate, activates source parity evidence, and keeps fidelity proof separate from content-fit and human-outcome claims."
+    },
+    {
+      "id": "trigger-carbon-is-optional",
+      "prompt": "운영 교육용 PPT지만 Carbon을 기본값으로 쓰지 말고 브랜드, editorial, custom, none 후보 중 내용에 맞는 방향을 골라줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring expression-system selection",
+      "expected_output": "The agent treats Carbon as one optional expression system, records selected and rejected candidates or a settled-with-reason state, and does not treat Carbon selection as visualization completion."
+    },
+    {
+      "id": "trigger-powerpoint-native-intent",
+      "prompt": "이 슬라이드를 PowerPoint native object로 의도적으로 만들어. 표, 프로세스, 연결 관계, 읽기 순서와 객체 간격을 검증해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring Mode S native route",
+      "expected_output": "The agent creates semantic object names and a native intent plan with required relations, audits geometry and coverage, and reports PPTX, render, native audit, and fresh PowerPoint open as separate proof surfaces."
+    },
+    {
+      "id": "trigger-pptx-native-conformance-self-remediation",
+      "prompt": "PPTX가 가끔 복구 대화상자를 띄워. 새 덱을 만들 때 PowerPoint 기능을 하나씩 의도적으로 결정하고, Pretendard 테마, 자동 쪽번호, 목차와 제목 흐름, 도형 텍스트 가운데 정렬을 실제 파일에서 검사해줘. 위반하면 파일을 억지로 수리하지 말고 원본에서 다시 만들 수 있게 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring PowerPoint Native Conformance and Source-Level Self-Remediation Gate",
+      "expected_output": "The agent creates a complete capability catalog and native conformance contract, defaults theme fonts to Pretendard, uses native title/section/TOC/automatic slide-number structures, checks center/middle native shape text except named reasons, registers raster exceptions, emits a source-only repair plan, and keeps the incident PPTX diagnostic-only."
+    },
+    {
+      "id": "negative-pptx-manual-page-number",
+      "prompt": "PowerPoint 쪽번호는 그냥 각 슬라이드 오른쪽 아래에 1, 2, 3을 텍스트로 써 넣고, 복구 대화상자가 뜬 파일은 XML만 고쳐서 계속 기준 원본으로 쓰게 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring PowerPoint native-conformance correction",
+      "expected_output": "The agent rejects manually typed page numbers and package repair lineage, requires a native automatic number placeholder or field, freezes recovery incidents as diagnostics, and routes changes to a fresh source-family rebuild."
+    },
+    {
+      "id": "trigger-pptx-fresh-pattern-family-after-recovery",
+      "prompt": "PowerPoint 복구 대화상자가 다시 떴다. 기존 후보를 수리해서 계속 쓰지 말고 fixed 패턴과 LLM 저작을 조합해 PPTX를 처음부터 다시 만들어. 이미지 검토와 텍스트 검토, PowerPoint 실제 열림도 따로 평가해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring PPTX pattern compiler and evidence-separation gate",
+      "expected_output": "The agent freezes the recovered candidate as diagnostic-only, creates an independent source_family_id and pattern compiler manifest, keeps pattern/schema/OOXML checks Fixed, routes content and scene choices to Flexible LLM judgment, records decisions, and reports structural-package, reading-content, viewing-render, and exact-hash native-runtime evidence independently."
+    },
+    {
+      "id": "trigger-fixed-flexible-decision",
+      "prompt": "시각화 제작 규칙을 fixed, flexible, decision으로 나누고 코드 계산과 사람 판단의 경계를 명확히 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring three-layer contract",
+      "expected_output": "The agent assigns schemas, paths, geometry, hashes, and validators to Fixed; project content and expression evidence to Flexible; and bounded pass/revise/blocked/human-choice selection to Decision."
+    },
+    {
+      "id": "trigger-prototype-authorization-evidence",
+      "prompt": "대표 표현군 프로토타입을 먼저 만들고 실제 근거 파일이 없거나 근거 문장이 똑같으면 전체 제작을 막아줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring prototype authorization gate",
+      "expected_output": "The agent requires an existing project SoT, family-specific rationale, prototype artifacts, content-fit review evidence, and fresh PowerPoint open evidence before full-scale authorization."
+    },
+    {
+      "id": "trigger-five-cycle-weakest-strongest-convergence",
+      "prompt": "이 긴 교육 덱에서 시각적 지원이 가장 약한 슬라이드와 가장 잘 된 슬라이드를 찾아 비교해. 강한 장면의 원리를 약한 장면과 다른 장면에 전이하고, 최소 다섯 번 반복하면서 편차와 같은 실수의 재발을 줄여줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring fixed-flexible-decision visual support convergence",
+      "expected_output": "The agent activates a minimum five-cycle ledger, reselects the current weakest and strongest-support scenes each cycle, extracts a relationship-to-cue-to-action principle rather than copying surface style, applies primary and secondary transfers, separates fixed audits from content-fit and human evidence, and creates pattern guards."
+    },
+    {
+      "id": "trigger-dashboard-support-convergence",
+      "prompt": "이 운영 대시보드 화면군을 fixed, flexible, decision으로 나누고, 상태 카드만 많은 취약 화면을 판단→조치→완료 근거가 드러나는 화면으로 반복 개선해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring cross-surface support convergence",
+      "expected_output": "The agent reuses the same convergence pattern outside slides, treating status-to-decision-to-action-to-evidence as the transferable principle, while leaving component choice flexible and using code only for declared implementation checks."
+    },
+    {
+      "id": "trigger-textbook-workbook-publication-contract",
+      "prompt": "Agentic GEO 내용을 본권과 워크북으로 나눠 공개 배포할 교재로 만들어. 초보 독자가 이해하고 스스로 해 볼 수 있게 하되, 표지와 목차에는 내부 제작/검증 문구를 보이지 않게 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring Mode B publication surface contract",
+      "expected_output": "The agent creates an artifact role map, gives the main textbook explanation/principles/examples and the workbook linked application activities, separates public-reader vocabulary from production evidence, and records public-surface plus format-profile validation without claiming reader outcomes as facts."
+    },
+    {
+      "id": "trigger-standard-informed-distribution-pdf",
+      "prompt": "이 교재를 PDF와 HTML로 배포한다. 적용 가능한 표준 기능을 빠짐없이 쓰고, PDF/A나 PDF/UA 인증 여부는 사실대로 표시해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring Mode B format standard profile",
+      "expected_output": "The agent inventories applicable PDF and HTML features, verifies native format evidence separately, uses semantic HTML navigation and PDF metadata/font/language/outline checks as applicable, and keeps conformance_claim as not_claimed until validator evidence exists."
+    },
+    {
+      "id": "trigger-fixed-system-open-materiality-scene-meaning",
+      "prompt": "디자인 시스템은 고정하되 장면마다 자유롭게 구성해. 장면 중심으로 의미를 강화하고, LLM이 이미지로 만들 수 있는 모든 표현을 후보로 열어 둬.",
+      "should_trigger": true,
+      "routing": "visual-authoring fixed-system open-materiality scene-centered route",
+      "expected_output": "The agent locks artifact-level style grammar without freezing a repeated layout, treats LLM-generatable visual materiality as an open set constrained only by real source/brand/license/safety/accessibility/medium/production limits, and records a scene-first packet plus deterministic meaning ownership for every major unit."
+    },
+    {
+      "id": "trigger-svg-still-needs-scene-centered-packet",
+      "prompt": "이미지는 쓰지 말고 SVG로 이 운영 흐름을 보여줘. 그래도 상태 변화와 독자가 내려야 할 판단이 한 장면으로 읽히는지 검증해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring all-route scene-centered SVG route",
+      "expected_output": "The agent may select SVG_ALLOWED, but still records an operational_state or abstract_relationship scene with entities or anchors, action/state change, 3-second core read, reader inference/action, visible cues, semantic boundary, design-system lock reference, and materiality selection rationale."
+    },
+    {
+      "id": "trigger-localized-visual-reflow-proof-refresh",
+      "prompt": "이 HTML 리포트의 영어·추상 문구를 구체적인 한국어로 바꾸고 실제 화면과 PDF에 반영해. 문장이 길어지면 카드 높이와 줄바꿈을 다시 잡고 기존 렌더 증거도 새로 만들어줘.",
+      "should_trigger": true,
+      "routing": "korean wording plus visual-authoring localization materialization route",
+      "expected_output": "The agent keeps Korean wording ownership with korean, preserves facts and claim boundaries, marks affected text-fit/geometry/render/native/accessibility proof stale, recomputes and rerenders the target surfaces, and blocks release while localization is translated_pending_reflow or concretized_pending_reflow."
+    },
+    {
+      "id": "trigger-llm-vlpp-improvement-loop",
+      "prompt": "VLPP 거리 계산과 LLM 리뷰를 합쳐 이 교재 표지를 개선해. 점수가 좋아졌다는 것만으로 완료라고 하지는 말고 다음 수정 행동을 정하게 해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring LLM + VLPP Improvement Contract",
+      "expected_output": "The agent keeps VLPP as deterministic expression-distance observation, uses LLM for contextual diagnosis and alternatives, records retain/revise/needs_human_review/blocked as the next action, and does not turn a combined score into a quality or reader-outcome claim."
+    },
+    {
+      "id": "near-miss-internal-authoring-copy-on-cover",
+      "prompt": "표지에 scene base layer, meaning layer, human outcome claim 상태와 draft 배너를 그대로 크게 넣어줘. 제작 과정이 보여서 전문적으로 보일 거야.",
+      "should_trigger": true,
+      "routing": "visual-authoring Publication Surface Contract correction",
+      "expected_output": "The agent rejects copying internal authoring and release-state vocabulary to reader-facing cover surfaces, replaces it with the actual reader promise or subject language, and retains the internal labels only in production evidence."
+    },
+    {
+      "id": "near-miss-workbook-replaces-textbook",
+      "prompt": "교재 본문은 거의 빼고 30개 체크리스트와 프롬프트만 넣어도 교과서라고 해도 되지?",
+      "should_trigger": true,
+      "routing": "visual-authoring Mode B role-boundary correction",
+      "expected_output": "The agent rejects calling a checklist-only artifact a sufficient textbook, preserves concept/mechanism/example/judgment explanation in the main text, and positions the checklists as a companion workbook or activity layer."
+    },
+    {
+      "id": "near-miss-geometry-equals-quality",
+      "prompt": "객체 간 거리가 모두 맞고 overlap이 0이면 콘텐츠에 적합하고 디자인도 좋은 것으로 자동 판정해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring claim-boundary correction",
+      "expected_output": "The agent rejects the requested inference: geometry is observed computation that can find implementation defects but cannot prove content fit, good design, comprehension, or learning outcome."
+    },
+    {
+      "id": "near-miss-repaired-pptx-becomes-fresh-source",
+      "prompt": "복구 대화상자가 떴던 PPTX를 PowerPoint에서 한 번 저장했으니 이제 새 후보의 기준 소스로 써도 되지? XML 검사도 통과했어.",
+      "should_trigger": true,
+      "routing": "visual-authoring no-repair-lineage correction",
+      "expected_output": "The agent rejects the lineage: a recovery-incident, normalized, converted, or UI-resaved package stays diagnostic-only and cannot authorize or seed a fresh candidate family. Static XML evidence does not substitute for a fresh exact-hash native-runtime gate."
+    },
+    {
+      "id": "near-miss-external-conversion-as-render-proof",
+      "prompt": "headless office conversion으로 PDF가 잘 나왔으니 PPTX 릴리즈와 native open도 통과로 처리해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring conversion-free evidence correction",
+      "expected_output": "The agent rejects the proof substitution: external conversion output is not a source family, native-runtime pass, or human-understanding proof. It routes to pattern compiler manifest, deterministic SVG/HTML/PPTX meaning layer or image scene-base integration proof for viewing, and exact-hash PowerPoint fresh-open evidence for native runtime."
+    },
+    {
+      "id": "near-miss-reference-only-improved-variant",
+      "prompt": "기준작과 더 비슷해졌으니 improved_variant로 통과시켜줘. 내용 적합성 리뷰는 생략해도 돼.",
+      "should_trigger": true,
+      "routing": "visual-authoring content-fit gate correction",
+      "expected_output": "The agent does not authorize improved_variant from similarity alone and requires content-fit evidence unless the task is explicitly faithful recreation, where similarity remains fidelity evidence only."
+    },
+    {
+      "id": "near-miss-simple-copy-edit",
+      "prompt": "이 슬라이드 제목 한 문장만 자연스럽게 고쳐줘.",
+      "should_trigger": false,
+      "routing": "copy editing",
+      "expected_output": "The agent performs the bounded copy edit without invoking the full visual-authoring pipeline."
+    },
+    {
+      "id": "near-miss-standalone-korean-translation",
+      "prompt": "이 문장 하나만 한국어로 번역해줘. 파일이나 화면에는 반영하지 않아도 돼.",
+      "should_trigger": false,
+      "routing": "korean translation",
+      "expected_output": "The agent routes the standalone wording task to korean and does not invoke visual reflow, render, or release gates."
+    },
+    {
+      "id": "near-miss-data-only-calculation",
+      "prompt": "이 JSON의 두 bbox 사이 vertical gap 숫자만 계산해줘.",
+      "should_trigger": false,
+      "routing": "deterministic calculation",
+      "expected_output": "The agent calculates the requested number without invoking the full authoring workflow or making visual-quality claims."
+    },
+    {
+      "id": "near-miss-single-slide-do-not-force-five-cycles",
+      "prompt": "이 한 장의 슬라이드에서 제목과 도형 간격만 빠르게 정리해줘. 전체 덱 비교나 반복 개선은 필요 없어.",
+      "should_trigger": true,
+      "routing": "visual-authoring bounded edit without convergence pattern",
+      "expected_output": "The agent may use the relevant visual/native checks for the bounded edit but does not force the five-cycle convergence pattern because there is no multi-scene variance or recurrence goal."
+    },
+    {
+      "id": "trigger-pptx-code-pattern-admission",
+      "prompt": "이 30장 강의안을 LLM 판단과 범용 코드로 PPTX로 만들어. 장면별 패턴을 고르되 OOXML과 검증 상태는 코드가 통제하고, 독자 화면에는 내부 제작 문구가 들어가지 않게 해.",
+      "should_trigger": true,
+      "routing": "visual-authoring PPTX Code-Pattern and Reader-Admission Gate",
+      "expected_output": "The agent creates a four-layer code-pattern catalog, lets the LLM emit only declarative scene/copy decisions, keeps raw OOXML and pass status under fixed code, runs catalog and reader-public admission before file writing, and separates structural, reading, viewing, and native-runtime evidence."
+    },
+    {
+      "id": "negative-pptx-no-catalog",
+      "prompt": "LLM이 자유롭게 slide.addText와 OOXML을 직접 만들게 하고, 열리기만 하면 검증 없이 통과 처리해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring fixed-code control correction",
+      "expected_output": "The agent rejects direct raw emission and self-certified pass status, routes flexible meaning decisions through a declared catalog and fixed gateways, and blocks file writing until deterministic pre-emit gates pass."
+    },
+    {
+      "id": "trigger-pptx-native-runtime-first-open",
+      "prompt": "새 PPTX가 PowerPoint에서 복구 창 없이 한 번 열렸어. 아직 12장 전체 검토와 제목·표 셀 편집 후 저장·재열기는 안 했는데, 이제 릴리즈 통과라고 말해도 돼?",
+      "should_trigger": true,
+      "routing": "visual-authoring PPTX Native Runtime Receipt Gate",
+      "expected_output": "The agent binds the observation to the exact candidate hash and fresh PowerPoint process, records pass_native_first_open_pending_release rather than release pass, and requires ordered slide review plus the named edit round-trips. It does not automate the PowerPoint UI or treat static/render evidence as a substitute."
+    },
+    {
+      "id": "negative-pptx-native-runtime-premature-release",
+      "prompt": "XML 검사도 통과했고 방금 PowerPoint 화면도 잠깐 봤으니 hash나 관찰 기록 없이 native runtime pass로 릴리즈해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring native-runtime proof correction",
+      "expected_output": "The agent rejects the proof substitution, requires a compiler-created exact-candidate gate plus separate observation and deterministic receipt, and distinguishes pending observation, partial first-open, full native-runtime pass, and incident failure."
+    },
+    {
+      "id": "trigger-user-decision-preview-and-progress",
+      "prompt": "이전 랜딩 페이지를 계속 개선할지 새로 만들지 먼저 물어봐. 전략과 색상을 실제 전체 UI 화면으로 비교하고 내가 고르게 한 뒤, 단계별 진행바로 진행 상황도 보여줘. 나중에 받을 사용자 피드백 리커트 문항도 준비해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring User Decision, Comparative Preview, and Progress Gate",
+      "expected_output": "Agent confirms goal and existing-work choice before authoring; shows step-by-step progress; generates at least two image concept plus complete target-surface previews; asks HCI-guided color selection; keeps human feedback off while providing later-use 7-point Likert bank; and asks credit choice before release."
+    },
+    {
+      "id": "near-miss-partial-palette-choice-without-user-confirmation",
+      "prompt": "색상칩 두 개와 로그인 카드 일부만 보고 나머지 화면은 알아서 정해서 즉시 릴리즈해줘. 저자 표기도 알아서 처리해.",
+      "should_trigger": true,
+      "routing": "visual-authoring decision-preview gate correction",
+      "expected_output": "Agent blocks the shortcut, declares required surfaces, presents complete comparable target screens and HCI criteria, waits for requester choice, and requests explicit author-credit decision before release."
+    },
+    {
+      "id": "trigger-browser-and-converter-auto-install-retry",
+      "prompt": "이 환경에는 브라우저와 이미지 변환기가 없을 수 있어. 웹 온보딩 전체 화면을 캡처하고 SVG를 PNG로 변환해야 하니, 없으면 설치 방법만 말하지 말고 지원되는 패키지 관리자로 설치한 뒤 다시 시도해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring portable runtime dependency bootstrap",
+      "expected_output": "Agent uses the portable runtime adapter to discover the browser/converter, runs only a known OS package-manager plan when automatic installation is enabled, re-discovers the executable, retries the requested capture/conversion, and records local evidence separately from usability, comprehension, behavior, and release claims."
+    },
+    {
+      "id": "near-miss-tool-install-opt-out-still-needs-actionable-guidance",
+      "prompt": "브라우저 자동 설치는 끄되, 브라우저가 없으면 그냥 blocked_missing_browser라고만 반환해줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring portable runtime installation-guidance correction",
+      "expected_output": "Agent refuses the obsolete blocked status. With automatic installation disabled, the adapter returns dependency_installation_required or unavailable with a reason, supported package-manager context, and manual install commands; it does not claim browser evidence."
+    },
+    {
+      "id": "trigger-discovered-browser-runtime-failure-diagnostic",
+      "prompt": "Chrome 경로는 찾았는데 headless capture가 SIGABRT로 끝나. 없는 브라우저라고 하거나 계속 설치하지 말고, 안전한 호환 profile과 다른 발견 후보를 확인한 뒤 실패 이유를 남겨줘. host 브라우저가 URL 정책으로 막으면 우회하지 마.",
+      "should_trigger": true,
+      "routing": "visual-authoring Browser runtime failure boundary",
+      "expected_output": "Agent distinguishes executable discovery from capture success, records bounded browser/profile attempts with exit code or signal and DOM assertion evidence, returns browser_runtime_failed plus actionable guidance when all portable attempts fail, and marks a host URL-policy rejection as blocked_tool_runtime without a bypass."
+    },
+    {
+      "id": "trigger-code-tool-runtime-and-in-app-browser",
+      "prompt": "이 웹 온보딩 화면의 전략 후보와 색상 후보를 보여줘. 설명만 하지 말고 코드로 화면을 띄운 뒤 인앱 브라우저에서 기본·오류·모바일 상태를 확인해서 전체 화면 비교를 남겨줘.",
+      "should_trigger": true,
+      "routing": "visual-authoring Tool Runtime Implementation Gate",
+      "expected_output": "Agent records imagegen, code renderer, and in-app browser adapters; runs the target UI at a URL; captures equivalent complete states with DOM or state assertions; and blocks selection if the runtime evidence cannot be produced."
+    }
+  ]
+}

@@ -33,6 +33,39 @@ flowchart LR
 | 랜딩 페이지·앱 UI | 사용자가 이해해야 할 상태·행동·결정 지점을 화면 구조로 구체화한다. |
 | 기존 자료 개선 | 원본을 그대로 꾸미기보다, 유지할 것·새로 만들 것·검증할 것을 구분해 새 후보를 만든다. |
 
+## 실제 결과 사례
+
+아래는 이 방식으로 완성한 결과물 가운데, 서로 다른 시각 문법이 또렷하게 남은 장면을 골랐습니다. 목적은 “보기 좋은 예시”를 모으는 데 있지 않습니다. 같은 내용을 지도·분기·시간·층위·경계·보고서 지면으로 각각 읽게 만드는 방식을 보여 줍니다. 독자의 실제 이해도나 업무 성과는 별도 사용자 검증 없이는 주장하지 않습니다.
+
+### 1. 한 가이드를 지도, 선택, 시간, 검증, 경계로 나눈 교육 시각물
+
+AI 협업 도구 학습 가이드에서 한 장의 만능 도식으로 끝내지 않고, 독자가 매 단계에서 다른 질문을 하도록 다섯 장면을 나눴습니다. 전체 관계는 지도에, 작업 표면 선택은 분기 구조에, 첫 실습은 시간 흐름에, 완료 조건은 검증 층에, 위험한 행동은 권한 경계에 담았습니다.
+
+<p align="center">
+  <img src="assets/examples/vibeworking-learning-map.png" alt="업무 장면에서 작업 표면 선택과 검증 반복으로 이어지는 전체 학습 지도" width="48%">
+  <img src="assets/examples/vibeworking-surface-map.png" alt="필요한 작업에 따라 Chat, Cowork, Code, Design을 고르는 분기 지도" width="48%">
+</p>
+<p align="center">
+  <img src="assets/examples/vibeworking-practice-timeline.png" alt="프로젝트 열기부터 검증과 기록까지 이어지는 15분 실습 흐름" width="32%">
+  <img src="assets/examples/vibeworking-verification-layers.png" alt="파일, 실행, 사용자 관점으로 나뉜 검증 3층 구조" width="32%">
+  <img src="assets/examples/vibeworking-permission-boundary.png" alt="낮음, 중간, 높음 위험 수준에 따른 권한과 위험 경계" width="32%">
+</p>
+
+### 2. 가정과 검증 경계를 숨기지 않는 의사결정 보고서
+
+사업 시나리오 보고서에서는 표지부터 “가정한 분석”임을 먼저 밝히고, 가격·정원·매출총액을 한 페이지에 모았습니다. 큰 수치가 결론처럼 보이지 않도록, 산술값과 아직 확인하지 않은 시장 수요를 같은 장면에서 분리했습니다.
+
+<p align="center">
+  <img src="assets/examples/ai-study-scenario-cover.png" alt="AI 스터디 사업 가정 기반 발행 시나리오의 표지와 증거 경계" width="35%">
+  <img src="assets/examples/ai-study-scenario-price-page.png" alt="49,000원과 59,000원 가격 시나리오, 좌석 매출총액, 시장 수요와 이익을 뜻하지 않는다는 경고가 담긴 보고서 페이지" width="47%">
+</p>
+
+### 3. 실제 제품 화면을 학습 장면으로 다시 엮은 분석 가이드
+
+PostHog 콘텐츠 행동 분석 가이드는 Heatmap, Replay, Funnel의 실제 화면을 그대로 늘어놓지 않았습니다. 화면 하나마다 먼저 확인할 질문, 다음에 볼 분해 기준, 관찰과 원인을 섞지 않는 중단 규칙을 붙여 12쪽의 학습 순서로 재구성했습니다. 이 사례의 제품 화면은 원권리자 자료이므로 저장소에는 복제하지 않고, 아래 자산 기록에 권리 경계와 제외 이유를 남겼습니다.
+
+선정 기준과 자산별 권리·주장 경계는 [`assets/examples/README.md`](assets/examples/README.md)에서 확인할 수 있습니다.
+
 ## 이렇게 사용합니다
 
 1. **원본을 준비합니다.** 브리프, 초안, 데이터, 기존 슬라이드, 메모처럼 지금 가진 자료면 충분합니다.
@@ -70,10 +103,10 @@ Show the proposed visual strategy before building.
 | [`references/`](references/) | 시각 전략, 리뷰, 문서·슬라이드 구현 기준 |
 | [`scripts/`](scripts/) | 구조와 구현 검증 도구 |
 | [`fixtures/`](fixtures/) · [`evals/`](evals/) | 검증용 입력과 평가 자료 |
-| [`assets/`](assets/) | 프로젝트 심볼과 자산 메타데이터 |
+| [`assets/`](assets/) | 프로젝트 심볼, 실제 결과 사례, 자산 메타데이터 |
 
 ## 범위와 라이선스
 
 이 프로젝트는 결과물이 사람에게 실제로 이해되었는지, 원본 편집 도구에서 열리는지, 배포가 완료되었는지를 출력 화면만으로 단정하지 않습니다. 필요한 증거와 사람의 승인은 작업 맥락에서 별도로 확인합니다.
 
-별도 표기가 없는 이 저장소의 원저작물은 [CC BY-NC 4.0](LICENSE)을 따릅니다. 심볼의 생성·권리 경계는 [`assets/visual-authoring-symbol.provenance.md`](assets/visual-authoring-symbol.provenance.md)에 기록했습니다.
+별도 표기가 없는 이 저장소의 원저작물은 [CC BY-NC 4.0](LICENSE)을 따릅니다. 심볼과 사례 자산의 생성·권리 경계는 [`assets/visual-authoring-symbol.provenance.md`](assets/visual-authoring-symbol.provenance.md)와 [`assets/examples/README.md`](assets/examples/README.md)에 기록했습니다.

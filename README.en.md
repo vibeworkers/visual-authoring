@@ -37,6 +37,81 @@ flowchart LR
 | Landing page or app UI | Makes the states, actions, and decision points a user needs to understand concrete in the screen structure. |
 | Improving existing material | Does more than decorate a source: separates what to keep, create, and verify before proposing a new candidate. |
 
+## Install it: step by step
+
+This package is more than a one-line prompt. `SKILL.md` works with its references, validation scripts, and assets, so **install the entire `visual-authoring` folder rather than copying `SKILL.md` alone**. Installation does not add a separate design app. It lets an AI agent read and use this working method.
+
+### 1. Choose the route that fits you
+
+| If this sounds like you | Use this route |
+|---|---|
+| You want to start in ChatGPT without a terminal | **A. Install in ChatGPT** below |
+| You use Codex or another agent compatible with `SKILL.md` | **B. Add the folder to your agent** below |
+| You are unsure which route applies | Try A first. If a work or school account blocks uploading, ask your administrator whether Skills are available to you. |
+
+### A. Install in ChatGPT — no terminal required
+
+1. In a browser, [download the latest ZIP of this repository](https://github.com/vibeworkers/visual-authoring/archive/refs/heads/main.zip).
+2. Open ChatGPT on the web or desktop and go to **Plugins → Skills → Create → Upload**. Menu names and placement can vary slightly by account and workspace.
+3. Choose the ZIP you downloaded. If the upload dialog asks for an extracted folder instead, select the `visual-authoring-main` folder—the folder where `SKILL.md` appears immediately inside it.
+4. Review the displayed description and license, then select **Install**.
+5. Open a new chat and select **Visual Authoring** from Skills. If your interface offers skill mentions, select `@Visual Authoring`.
+6. Send this message to confirm the first run:
+
+~~~text
+Use Visual Authoring to help me decide what to make from this material.
+First, show what you can confirm in the material and what still needs confirmation.
+~~~
+
+If you cannot find Skills or Upload, the installation may not be at fault. Your plan, role, or workspace settings may have Skills or skill uploading disabled. Ask an administrator or check [OpenAI’s Skills guide](https://help.openai.com/en/articles/20001066).
+
+### B. Add the folder to Codex or another `SKILL.md`-compatible agent
+
+1. If you are comfortable with a terminal, clone the repository from the place where you work. If you are not, download and extract the ZIP as in route A instead.
+
+~~~sh
+git clone https://github.com/vibeworkers/visual-authoring.git
+~~~
+
+2. In your agent’s settings or official documentation, look for **Skills**, **Import skill**, **Custom skills**, or a **skill folder**. Menu names and locations differ by tool, so use the location your agent documents rather than creating a guessed personal path.
+3. Import or copy the complete `visual-authoring` folder. After installation, the structure should look like this:
+
+~~~text
+<the skill folder documented by your agent>/
+  visual-authoring/
+    SKILL.md
+    references/
+    scripts/
+    assets/
+    agents/
+    fixtures/
+    evals/
+~~~
+
+4. Start a new chat or session in the agent. Some tools discover new skills only when a session starts.
+5. Select **Visual Authoring** from the Skills list. In tools that support calling a skill by name, you can add `$visual-authoring` and make a request like this:
+
+~~~text
+$visual-authoring
+I want to turn these meeting notes into something a teammate seeing them for the first time can understand and use to choose a next action.
+I am not sure what to make, so ask no more than three questions first.
+~~~
+
+### 2. Check that installation worked
+
+On the first request, the AI should ask about the source, reader, desired change, or artifact—or separate what it can confirm in the material from what is `Needs confirmation`. That is an early signal that the skill was read; it does not establish final artifact quality, reader understanding, or completed publication.
+
+### 3. If you get stuck, check in this order
+
+| Symptom | First thing to do |
+|---|---|
+| The upload fails | Check whether the dialog expects an extracted folder instead of a ZIP. On a work or school account, ask an administrator whether you have permission to upload Skills. |
+| The skill is not in the list | Confirm that `SKILL.md` sits immediately inside the `visual-authoring` folder, then open a new chat or session. |
+| You get a general answer instead | Select Visual Authoring directly in Skills, or explicitly use `$visual-authoring` or `@Visual Authoring` where the tool supports it. |
+| You are asked to install another program | No separate credentials are needed for basic document structuring. Optional work such as image conversion or web-screen checks can require Python, a browser, or a conversion tool; review the reason and permission request before deciding. |
+
+To update, download the latest ZIP or repository again, replace the installed copy, and open a new session. If you cloned with Git, run `git pull` inside the repository, then follow the same check.
+
 ## New here? A 10-minute starting guide
 
 Visual Authoring is not a separate design application. It is a working guide for sharing material and a purpose with an AI agent that can use this skill, then reviewing the result together. You do not need design-tool experience. Start with any draft, note, table, link, or existing asset you have, plus **who needs to understand or decide what**.

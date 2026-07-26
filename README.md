@@ -5,6 +5,10 @@
 <h1 align="center">Visual Authoring</h1>
 
 <p align="center">
+  <a href="README.md">한국어</a> · <a href="README.en.md">English</a>
+</p>
+
+<p align="center">
   <strong>복잡한 자료를, 사람이 이해하고 검토하고 결정할 수 있는 시각 결과물로 만듭니다.</strong><br>
   <em>Turn raw material into visual work people can understand, review, and act on.</em>
 </p>

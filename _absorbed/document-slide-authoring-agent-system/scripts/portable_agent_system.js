@@ -33,7 +33,7 @@ const REQUIRED_SKILLS = [
   { id: "semantic-staging-design-skill", path: "agent-system/skills/semantic-staging-design/SKILL.md" },
   { id: "visualization-flow-skill", path: "agent-system/skills/visualization-flow/SKILL.md" },
   { id: "pptx-native-build-skill", path: "agent-system/skills/pptx-native-build/SKILL.md" },
-  { id: "pptx-pattern-compiler-gate-skill", path: "agent-system/skills/pptx-pattern-compiler-gate/SKILL.md" },
+  { id: "drawingml-table-anchor-sanitizer-skill", path: "agent-system/skills/drawingml-table-anchor-sanitizer/SKILL.md" },
   { id: "artifact-surface-separation-skill", path: "agent-system/skills/artifact-surface-separation/SKILL.md" },
   { id: "presentationml-compliance-skill", path: "agent-system/skills/presentationml-compliance/SKILL.md" },
   { id: "repetition-release-gate-skill", path: "agent-system/skills/repetition-release-gate/SKILL.md" },
@@ -67,8 +67,6 @@ const REQUIRED_TOOLS = [
   "pptx-build",
   "presentationml-spec-check",
   "native-powerpoint-check",
-  "native-object-geometry-check",
-  "pptx-native-conformance-check",
   "recovery-compare-check",
   "repetition-gate-check",
   "release-check",
@@ -117,8 +115,6 @@ const REQUIRED_RELEASE_GATES = [
   "vlpp-expression-distance-boundary",
   "presentationml-source-coverage",
   "native-powerpoint-package",
-  "native-object-intent-geometry-coverage",
-  "native-conformance-and-source-remediation",
   "artifact-surface-separation",
   "repetition-infrastructure",
   "release-readiness",
@@ -225,72 +221,6 @@ const REQUIRED_LAYOUT_ELEMENT_CALCULATION_FIELDS = [
   "native_object_order",
   "overlap_risk"
 ];
-const REQUIRED_NATIVE_OBJECT_INTENT_FIELDS = [
-  "unit_id",
-  "slide_number",
-  "semantic_role",
-  "criticality",
-  "native_requirement",
-  "expected_native_type",
-  "planned_object_names",
-  "edit_boundary",
-  "group_name",
-  "z_order",
-  "reading_order",
-  "required_relations",
-  "presentation_behavior",
-  "raster_exception_reason"
-];
-const REQUIRED_NATIVE_GEOMETRY_METRICS = [
-  "out_of_bounds_non_bleed_count",
-  "unintended_overlap_count",
-  "max_alignment_error_pt",
-  "max_spacing_deviation_ratio_or_pt",
-  "detached_required_connector_count",
-  "object_density_per_slide",
-  "critical_native_coverage",
-  "required_relation_coverage"
-];
-const REQUIRED_NATIVE_DECISION_STATUSES = ["pass_local", "revise", "blocked", "needs_human_choice"];
-const REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES = [
-  "slide_master_layout_theme",
-  "theme_font_scheme",
-  "title_placeholder",
-  "outline_navigation",
-  "automatic_slide_number",
-  "speaker_notes",
-  "native_text_in_shapes",
-  "editable_shapes",
-  "connectors",
-  "editable_tables",
-  "editable_charts",
-  "object_naming_reading_order",
-  "accessibility",
-  "hyperlinks_navigation",
-  "animations_transitions",
-  "media"
-];
-const REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS = [
-  "pptx-native-conformance-contract.json",
-  "pptx-native-conformance-report.json",
-  "pptx-native-repair-plan.json"
-];
-const ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES = ["used", "intentionally_not_used", "not_applicable"];
-const REQUIRED_CONTENT_FIT_DIMENSIONS = [
-  "content_task_action",
-  "semantic_relationship_hierarchy",
-  "medium_editability_intent",
-  "geometry_accessibility_reproducibility",
-  "render_package_native_open",
-  "human_outcome_evidence"
-];
-const REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS = [
-  "project_sot_exists",
-  "family_specific_rationale",
-  "prototype_artifacts_exist",
-  "content_review_evidence_exists",
-  "fresh_powerpoint_open_evidence_exists"
-];
 const REQUIRED_COURSE_FLOW_FIELDS = [
   "program_goal",
   "audience_context",
@@ -388,7 +318,7 @@ const REQUIRED_ROUTING_EXPERIMENT_FIELDS = [
   "expected_behavior",
   "near_miss_rationale"
 ];
-const COMPATIBLE_NPM_WORKSPACE = process.env.VISUAL_AUTHORING_NPM_WORKSPACE || null;
+const COMPATIBLE_NPM_WORKSPACE = "/Volumes/Extend/lecture-works/AX-Groups/AX/Training/.work/agentic_paradigm_editable";
 const COMPATIBLE_NPM_STATE_OUTPUTS = [
   "09-system-state.json",
   "10-system-runbook.md",
@@ -512,21 +442,21 @@ const SKILL_MODULE_DEFINITIONS = [
     skillId: "pptx-native-build-skill",
     owner: "pptx-build-agent",
     trigger: "Use this skill when a new editable PowerPoint file must be generated through standard PresentationML/OPC-aware helpers or the compatible npm authoring flow instead of repairing an old recovered file.",
-    inputs: ["outline notes", "slide planning map", "symbol inventory", "semantic design system", "staging design brief", "slide specs", "semantic variables", "layout element calculations", "visual value spec", "native PowerPoint feature requirements", "native object intent plan", "PowerPoint native conformance contract", "PresentationML constraints"],
-    outputs: ["compatible npm state outputs when routed", "new PPTX", "native feature audit", "native object geometry and coverage audit", "native conformance report", "source-level repair plan", "standard XML generation notes", "editable layouts, notes, tables, charts, hyperlinks, alt text, semantic object names, groups, connectors, reading order, and native object order"],
-    tools: ["system init", "system run", "PPTX standard XML build", "project-specific PPTX build", "native PowerPoint package check", "native object geometry check", "PPTX native conformance check"],
-    exitGate: "Exit only when outline notes, slide-planning-map.json, symbol-inventory.json, semantic-design-system.json, layout calculations, native-object-intent-plan.json, and pptx-native-conformance-contract.json exist; a new PPTX exists; native conformance records all core capability decisions, Pretendard theme, native title/outline/automatic number defaults, and named raster exceptions; package checks pass; and the hash-bound native-object audit closes critical geometry and semantic coverage without overstating content fit or human outcomes. On a violation, amend the source contract or generator and rebuild a fresh source family instead of patching a recovered PPTX."
+    inputs: ["outline notes", "slide planning map", "symbol inventory", "semantic design system", "staging design brief", "slide specs", "semantic variables", "layout element calculations", "visual value spec", "native PowerPoint feature requirements", "PresentationML constraints"],
+    outputs: ["compatible npm state outputs when routed", "new PPTX", "native feature audit", "standard XML generation notes", "editable layouts, notes, tables, charts, hyperlinks, alt text, object names, reading order, and native object order"],
+    tools: ["system init", "system run", "PPTX standard XML build", "project-specific PPTX build", "native PowerPoint package check"],
+    exitGate: "Exit only when outline notes, slide-planning-map.json, symbol-inventory.json, semantic-design-system.json, and layout element calculations exist, compatible npm state/runbook/release-packet outputs exist when routed, a new PPTX exists, standard XML generation constraints were applied, and native PowerPoint feature checks pass structurally."
   },
   {
-    dir: "pptx-pattern-compiler-gate",
-    title: "PPTX Pattern Compiler Gate Skill",
-    skillId: "pptx-pattern-compiler-gate-skill",
+    dir: "drawingml-table-anchor-sanitizer",
+    title: "DrawingML Table Anchor Sanitizer Skill",
+    skillId: "drawingml-table-anchor-sanitizer-skill",
     owner: "pptx-build-agent",
-    trigger: "Use this skill when a fresh PPTX family needs pattern-route, source-lineage, render-ledger, and native-runtime evidence separation before build or scale.",
-    inputs: ["pptx-pattern-compiler-manifest.json", "outline notes", "native object intent plan", "render evidence plan", "lineage incident inventory"],
-    outputs: ["pattern compiler manifest audit", "lineage rejection result", "four-ledger evidence state", "blocked source-family notes"],
+    trigger: "Use this skill when DrawingML tables, anchors, or text body structure can cause PowerPoint recovery dialogs.",
+    inputs: ["slide XML", "DrawingML table XML", "native feature audit"],
+    outputs: ["sanitized table anchors", "invalid anchor count", "repair notes"],
     tools: ["PresentationML package check", "native feature audit"],
-    exitGate: "Exit only when every slide points to an allowed pattern, invalid DrawingML structures block at source-build time, prohibited lineage is rejected, and structural/read/render/native-runtime ledgers remain separate."
+    exitGate: "Exit only when invalid table cell anchors and related DrawingML structure issues are zero or explicitly blocked."
   },
   {
     dir: "artifact-surface-separation",
@@ -591,7 +521,7 @@ function createArchitecture(projectName) {
     schema_version: "1.6-portable",
     system_id: SYSTEM_ID,
     goal: `Represent the ${name} cognitive document, visual, slide, and PowerPoint authoring workflow as a modular agent system whose skills and tools are verified against local evidence.`,
-    claim_boundary: "The system may claim structural readiness when the agent-system audit passes. It may claim working-source readiness when source of truth, clarification, conflict, and fixed/flexible/decisional classification are explicit. It may claim cognitive authoring packet readiness when required reader-task, semantic-fit, unfolding, and visual-value fields are present. It may claim outline-note readiness when reader situation, purpose, section flow, slide sequence, visible message, spoken notes, evidence, visual intent, and open questions are explicit before PPTX work. It may claim cognitive readability proxy readiness when storyline, assertion-evidence, one-beat, scan, load, and session-feedback pattern checks pass. It may claim semantic-staging readiness when scene beat, attention entry, curiosity gap, reading path, listening cue, evidence reveal, semantic variables, accessibility/load, design-freedom boundary, open expression options, selected-expression rationale, and unnecessary-constraint removal are explicit before visualization or PPTX build. It may claim image-first visualization readiness when visual candidates or contact sheets are produced before build and their semantic roles are explicit. It may claim VLPP expression-distance readiness only as observed computation over symbolic expression vectors, not learner psychology. It may claim local PowerPoint-native conformance when the contract records every core capability decision and a package report passes; this does not mean that a recovered PPTX was repaired, that the file opened in Microsoft PowerPoint, or that a person understood the deck. It may claim artifact handoff readiness only when learner-facing, instructor/facilitator, production source, evidence/fact table, render/native proof, and delivery/handoff surfaces are separated. It may claim compatible npm authoring readiness only when system state, runbook, release packet, new PPTX, PresentationML/native/repetition checks, and manual-open-checks/latest-powerpoint-open-check.json are present with result=no_recovery_dialog and the open check is newer than the PPTX build. It may claim release readiness only after project-specific native checks pass and a fresh Microsoft PowerPoint open check records no recovery dialog. Any rebuild after the open check invalidates that release claim. It may claim human comprehension, retention, or transfer only after separate human outcome evidence.",
+    claim_boundary: "The system may claim structural readiness when the agent-system audit passes. It may claim working-source readiness when source of truth, clarification, conflict, and fixed/flexible/decisional classification are explicit. It may claim cognitive authoring packet readiness when required reader-task, semantic-fit, unfolding, and visual-value fields are present. It may claim outline-note readiness when reader situation, purpose, section flow, slide sequence, visible message, spoken notes, evidence, visual intent, and open questions are explicit before PPTX work. It may claim cognitive readability proxy readiness when storyline, assertion-evidence, one-beat, scan, load, and session-feedback pattern checks pass. It may claim semantic-staging readiness when scene beat, attention entry, curiosity gap, reading path, listening cue, evidence reveal, semantic variables, accessibility/load, design-freedom boundary, open expression options, selected-expression rationale, and unnecessary-constraint removal are explicit before visualization or PPTX build. It may claim image-first visualization readiness when visual candidates or contact sheets are produced before build and their semantic roles are explicit. It may claim VLPP expression-distance readiness only as observed computation over symbolic expression vectors, not learner psychology. It may claim artifact handoff readiness only when learner-facing, instructor/facilitator, production source, evidence/fact table, render/native proof, and delivery/handoff surfaces are separated. It may claim compatible npm authoring readiness only when system state, runbook, release packet, new PPTX, PresentationML/native/repetition checks, and manual-open-checks/latest-powerpoint-open-check.json are present with result=no_recovery_dialog and the open check is newer than the PPTX build. It may claim release readiness only after project-specific native checks pass and a fresh Microsoft PowerPoint open check records no recovery dialog. Any rebuild after the open check invalidates that release claim. It may claim human comprehension, retention, or transfer only after separate human outcome evidence.",
     runtime_compatibility: {
       status: "shared-core only / no-delta",
       reason: "The agent system is encoded as local JSON, Markdown, and deterministic Node.js checks. It does not require a separate agent runtime."
@@ -626,7 +556,6 @@ function createArchitecture(projectName) {
     "workflow stage order and stage-order checks",
     "artifact surface separation requirements",
         "structural versus release readiness boundary",
-        "PowerPoint native-conformance contract and source-only remediation boundary",
         "manual PowerPoint open-check gate",
         "compatible npm process order when that route is available",
         "fresh open check newer than generated PPTX build",
@@ -680,60 +609,18 @@ function createArchitecture(projectName) {
     },
     three_layer_contract: {
       required_fields: REQUIRED_THREE_LAYER_FIELDS,
-      fixed: ["executable workflow and schema checks", "object geometry and connector calculations", "evidence state and decision status vocabularies", "release gates", "artifact surface roles", "runtime compatibility status"],
-      flexible: ["content visual strategy", "semantic units and geometry targets", "visual tone and expression system", "layout expression", "project-specific thresholds and filenames"],
-      decisional: ["content-fit selection", "native-image-hybrid judgment", "claim strength", "evidence sufficiency", "pass_local-revise-blocked-needs_human_choice status"],
-      drift_rule: "A prose-only calculation claim is not Fixed. Flexible targets cannot change fixed formulas, evidence labels, release gates, or decisional status vocabularies without an explicit version bump and routing experiment."
-    },
-    content_fit_and_expression_contract: {
-      hierarchy: REQUIRED_CONTENT_FIT_DIMENSIONS,
-      reference_rule: "Reference similarity is diagnostic only unless the user explicitly requests faithful recreation. Improved means better fit to content, reader task, action, editability, and medium stability, not greater visual similarity.",
-      expression_system_rule: "Carbon, Vivid, brand, editorial, custom, and none-with-reason are optional expression-system choices. Selecting Carbon is not itself visualization, and PowerPoint native objects are a medium implementation rather than an expression system.",
-      geometry_boundary: "Object distance, alignment, overlap, connector attachment, package XML, and render checks are observed computation. They may detect implementation defects but cannot prove content fit, visual quality, comprehension, or learning outcome."
-    },
-    prototype_authorization_contract: {
-      manifest: "project-gate.json",
-      validator: "<visual-authoring>/scripts/validate_authoring_prototype_gate.py",
-      required_evidence: REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS,
-      decision_statuses: REQUIRED_NATIVE_DECISION_STATUSES,
-      rule: "Prototype every materially different expression family before scale. Authorization requires existing project SoT, family-specific chosen and rejected rationale, prototype artifacts, content-fit review evidence, and for PPTX a fresh no-recovery PowerPoint open record.",
-      claim_boundary: "The validator proves traceability and authorization consistency only; a human author-reviewer owns content-fit judgment."
+      fixed: ["workflow order", "course-flow to slide-planning to symbol-inventory to design-system dependency", "release gates", "artifact surface roles", "evidence boundary labels", "runtime compatibility status"],
+      flexible: ["wording", "examples", "visual tone", "layout expression", "project-specific filenames"],
+      decisional: ["audience action", "claim strength", "evidence sufficiency", "surface inclusion or exclusion", "manual release status"],
+      drift_rule: "A flexible adaptation cannot change fixed workflow gates or decisional claim boundaries without an explicit version bump and routing experiment."
     },
     intentional_implementation_contract: {
       required_fields: REQUIRED_INTENTIONAL_IMPLEMENTATION_FIELDS,
       calculated_value_required_fields: REQUIRED_CALCULATED_VALUE_FIELDS,
-      fixed_rule: "Workflow order, schemas, release gates, evidence labels, object geometry formulas, and stage-order checks must be executable and deterministic before implementation.",
-      flexible_rule: "Content strategy, expression system, wording, semantic groups, visual tone, layout targets, image style, thresholds, and project-specific filenames may vary inside recorded constraints.",
-      decisional_rule: "Content fit, native-image-hybrid choice, candidate selection, claim strength, evidence sufficiency, and pass_local/revise/blocked/needs_human_choice decisions must name the fixed observations and contextual rationale used.",
-      implementation_rule: "Every important implementation value must be traceable to semantic role, reader situation, medium constraint, safe area, readable size, density, scan path, action exit, or a declared native geometry relation."
-    },
-    native_object_intent_contract: {
-      intent_plan: "native-object-intent-plan.json",
-      audit_output: "native-object-audit.json",
-      intent_required_fields: REQUIRED_NATIVE_OBJECT_INTENT_FIELDS,
-      geometry_metric_fields: REQUIRED_NATIVE_GEOMETRY_METRICS,
-      decision_statuses: REQUIRED_NATIVE_DECISION_STATUSES,
-      evidence_state: "observed_computation",
-      fixed_rule: "The audit records exact PPTX and intent-plan hashes and computes bounds, overlap, alignment, spacing, connector attachment, object density, and semantic coverage against declared relations.",
-      flexible_rule: "Projects declare semantic units, criticality, geometry targets, tolerances, noncritical coverage, and raster exceptions before build.",
-      decisional_rule: "Geometry and semantic coverage can support pass_local/revise/blocked/needs_human_choice but cannot prove content fit, good design, edit-session success, or learner outcome.",
-      freshness_rule: "Any PPTX rebuild makes native-object, geometry, render, and manual-open evidence stale."
-    },
-    native_pptx_conformance_contract: {
-      contract: "pptx-native-conformance-contract.json",
-      report: "pptx-native-conformance-report.json",
-      repair_plan: "pptx-native-repair-plan.json",
-      core_capabilities: REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES,
-      allowed_capability_statuses: ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES,
-      default_theme_font: "Pretendard",
-      automatic_slide_number_mode: "automatic_powerpoint",
-      default_text_frame_alignment: { horizontal: "center", vertical: "middle" },
-      source_mutation_only: true,
-      fixed_rule: "Every core PowerPoint capability is declared as used, intentionally_not_used, or not_applicable before build. A capability status never implies that a feature is inserted merely to increase feature count.",
-      flexible_rule: "Projects may select the applicable native features, named text-alignment exceptions, raster scene exceptions, and font-as-image exceptions when a semantic reason and equivalent text are recorded.",
-      decisional_rule: "Native versus raster choice is made from semantic role, editing value, presentation behavior, and accessibility evidence; structural conformance does not prove content fit or human outcome.",
-      source_lineage_rule: "A recovered or repair-dialog PPTX is diagnostic input only. Amend the authored source, assign a fresh source family, rebuild, and rerun checks; never patch, convert, or resave the recovered package as the source of truth.",
-      evidence_boundary: "A pass_local report is package-level conformance only. Fresh Microsoft PowerPoint open evidence remains a separate native-runtime gate."
+      fixed_rule: "Workflow order, release gates, evidence labels, artifact-surface roles, and stage-order checks must be explicitly fixed before implementation.",
+      flexible_rule: "Wording, examples, visual tone, layout expression, image style, and project-specific filenames may vary only inside the fixed gates and recorded constraints.",
+      decisional_rule: "Audience action, candidate selection, claim strength, evidence sufficiency, and override decisions must be recorded with rationale.",
+      implementation_rule: "Every important implementation value must be traceable to semantic role, reader situation, medium constraint, safe area, readable size, density, scan path, or action exit."
     },
     course_flow_to_design_system_contract: {
       sequence_lock: [
@@ -877,9 +764,6 @@ function createArchitecture(projectName) {
       "routing-experiment-table.md",
       "presentationml-compliance-process.md",
       "repeated-issue-playbook.md",
-      "pptx-native-conformance-contract.json",
-      "pptx-native-conformance-report.json",
-      "pptx-native-repair-plan.json",
       "09-system-state.json",
       "10-system-runbook.md",
       "11-release-packet.md",
@@ -1013,10 +897,10 @@ function createArchitecture(projectName) {
       {
         id: "pptx-build-agent",
         label: "PPTX Native Build Agent",
-    role: "Create a new editable PowerPoint package from outline notes and slide specs with intentional semantic object names/types/relations, PresentationML/OPC-aware generation, native layout, theme, notes, tables, charts, connectors, read order, hash-bound geometry/coverage evidence, and source-level remediation when a native-conformance check finds a violation.",
-    owns: ["compatible_npm_system_state", "new_pptx_generation", "standard_xml_generation", "native_powerpoint_features", "native_object_intent_plan", "native_object_geometry_audit", "native_pptx_conformance_contract", "native_pptx_conformance_report", "native_pptx_source_repair_plan", "semantic_native_coverage", "source_build_validation", "pattern_compiler_lineage_gate", "editable_object_surface"],
-        uses_skills: ["pptx-native-build-skill", "pptx-pattern-compiler-gate-skill"],
-    outputs: ["09-system-state.json", "10-system-runbook.md", "11-release-packet.md", "native-object-intent-plan.json", "pptx-native-conformance-contract.json", "Document_Slide_Authoring_System_new.pptx", "native-feature-audit.json", "native-object-audit.json", "pptx-native-conformance-report.json", "pptx-native-repair-plan.json"],
+        role: "Create a new editable PowerPoint package from outline notes and slide specs through the compatible npm system run when available, PresentationML/OPC-aware standard XML generation, native layout, theme, notes, tables, charts, alt text, read order, and audit slide surfaces.",
+        owns: ["compatible_npm_system_state", "new_pptx_generation", "standard_xml_generation", "native_powerpoint_features", "drawingml_sanitization", "editable_object_surface"],
+        uses_skills: ["pptx-native-build-skill", "drawingml-table-anchor-sanitizer-skill"],
+        outputs: ["09-system-state.json", "10-system-runbook.md", "11-release-packet.md", "Document_Slide_Authoring_System_new.pptx", "native-feature-audit.json"],
         handoff_to: ["presentationml-compliance-agent", "artifact-surface-agent", "repetition-gate-agent"]
       },
       {
@@ -1165,14 +1049,12 @@ function createArchitecture(projectName) {
       },
       {
         id: "pptx-standard-xml-build",
-        command: "project-specific: build a new PPTX with PresentationML/OPC-aware helpers, source-build validation, and pattern compiler evidence separation",
+        command: "project-specific: build a new PPTX with PresentationML/OPC-aware helpers such as pptxgenjs_helpers and project-specific XML sanitizers",
         evidence: ["Document_Slide_Authoring_System_new.pptx", "native-feature-audit.json"]
       },
       { id: "pptx-build", command: "npm run build", evidence: ["Document_Slide_Authoring_System_new.pptx"] },
       { id: "presentationml-spec-check", command: "npm run verify:presentationml-spec", evidence: ["spec_sources/presentationml/reports/presentationml-spec-audit.json"] },
       { id: "native-powerpoint-check", command: "npm run verify:powerpoint", evidence: ["native-feature-audit.json"] },
-      { id: "native-object-geometry-check", command: "<visual-authoring>/scripts/visual-authoring-runtime run <visual-authoring>/scripts/audit_pptx_native_objects.py --pptx Document_Slide_Authoring_System_new.pptx --intent native-object-intent-plan.json --output native-object-audit.json", evidence: ["native-object-intent-plan.json", "native-object-audit.json"] },
-      { id: "pptx-native-conformance-check", command: "<visual-authoring>/scripts/visual-authoring-runtime run <visual-authoring>/scripts/validate_pptx_native_conformance.py --pptx Document_Slide_Authoring_System_new.pptx --contract pptx-native-conformance-contract.json --report pptx-native-conformance-report.json --repair-plan pptx-native-repair-plan.json", evidence: REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS, pass_when: "status=pass_local; otherwise repair only the declared source and rebuild a fresh source family" },
       { id: "recovery-compare-check", command: "npm run compare:recovery", evidence: ["recovery comparison result or explicit no-recovery-artifact note"] },
       { id: "repetition-gate-check", command: "npm run verify:repetition-gate", evidence: ["repetition-gate-audit.json"] },
       {
@@ -1313,8 +1195,8 @@ function createArchitecture(projectName) {
         stage: "new-pptx-native-build",
         agent: "pptx-build-agent",
         primary_skill: "pptx-native-build-skill",
-        exit_condition: "Outline notes, a Native Object Intent Plan, and a PowerPoint native-conformance contract exist before build; a new PPTX exists; all core capability choices, Pretendard theme, native title/outline/automatic numbering, named raster exceptions, and source-only remediation policy are checked; native package and hash-bound geometry/semantic coverage audits pass local blockers without overstating visual or human outcomes.",
-        required_evidence: ["outline-notes.md", "slide-planning-map.json", "symbol-inventory.json", "semantic-design-system.json", "staging-design-brief.json", "image-first-visualization-packet.json", "09-system-state.json", "10-system-runbook.md", "11-release-packet.md", "native-object-intent-plan.json", "pptx-native-conformance-contract.json", "Document_Slide_Authoring_System_new.pptx", "native-feature-audit.json", "native-object-audit.json", "pptx-native-conformance-report.json", "pptx-native-repair-plan.json"]
+        exit_condition: "Outline notes exist, compatible npm state/runbook/release-packet outputs exist when this route is used, a new PPTX exists, and native PowerPoint audit passes.",
+        required_evidence: ["outline-notes.md", "slide-planning-map.json", "symbol-inventory.json", "semantic-design-system.json", "staging-design-brief.json", "image-first-visualization-packet.json", "09-system-state.json", "10-system-runbook.md", "11-release-packet.md", "Document_Slide_Authoring_System_new.pptx", "native-feature-audit.json"]
       },
       {
         order: 16,
@@ -1382,8 +1264,6 @@ function createArchitecture(projectName) {
       { id: "vlpp-expression-distance-boundary", source: "vlpp-expression-distance-monitor.json", pass_when: "distance metric, target vector, candidate vectors, distance-to-target, evidence_state=observed_computation, and non-psychological claim boundary are explicit" },
       { id: "presentationml-source-coverage", source: "spec_sources/presentationml/reports/presentationml-spec-audit.json", pass_when: "status=pass and coverage_counts.failed=0" },
       { id: "native-powerpoint-package", source: "native-feature-audit.json", pass_when: "status=pass and invalidTableCellAnchors=0 and slideWorkflowIssues=0" },
-      { id: "native-object-intent-geometry-coverage", source: "native-object-audit.json", pass_when: "status=pass_local, PPTX and intent hashes match, exact-zero critical blockers pass, and critical/relation coverage is 1.0 or not_applicable" },
-      { id: "native-conformance-and-source-remediation", source: "pptx-native-conformance-report.json and pptx-native-repair-plan.json", pass_when: "report.status=pass_local; a repair_required or blocked report requires source-only correction and a fresh source family before this gate can pass" },
       { id: "artifact-surface-separation", source: "artifact-surface-map.json", pass_when: "required artifact surfaces are mapped to distinct roles, paths, and readiness states" },
       { id: "repetition-infrastructure", source: "repetition-gate-audit.json", pass_when: "status=pass and compare:recovery has no active repeated-recovery blocker" },
       { id: "release-readiness", source: "repetition-gate-audit.json", pass_when: "release_status=pass or release_status=pass_superseded_old_recovery_artifacts" },
@@ -1404,8 +1284,8 @@ function toolsForSkill(skillId) {
     "session-feedback-pattern-gate-skill": ["session-feedback-pattern-check"],
     "semantic-staging-design-skill": ["semantic-design-system-check", "semantic-staging-design-check"],
     "visualization-flow-skill": ["tools-check", "symbol-inventory-check", "semantic-design-system-check", "semantic-staging-design-check", "image-first-visualization-check", "vlpp-expression-distance-check"],
-    "pptx-native-build-skill": ["system-init", "system-run", "pptx-standard-xml-build", "pptx-build", "native-powerpoint-check", "native-object-geometry-check", "pptx-native-conformance-check"],
-    "pptx-pattern-compiler-gate-skill": ["native-powerpoint-check", "presentationml-spec-check"],
+    "pptx-native-build-skill": ["system-init", "system-run", "pptx-standard-xml-build", "pptx-build", "native-powerpoint-check"],
+    "drawingml-table-anchor-sanitizer-skill": ["native-powerpoint-check", "presentationml-spec-check"],
     "artifact-surface-separation-skill": ["artifact-surface-separation-check"],
     "presentationml-compliance-skill": ["presentationml-spec-check", "native-powerpoint-check"],
     "repetition-release-gate-skill": ["recovery-compare-check", "repetition-gate-check", "release-check"],
@@ -1472,7 +1352,6 @@ function createReadme() {
     "npm run research:build",
     "npm run verify:research",
     "npm run verify:powerpoint",
-    "<visual-authoring>/scripts/visual-authoring-runtime run <visual-authoring>/scripts/validate_pptx_native_conformance.py --pptx Document_Slide_Authoring_System_new.pptx --contract pptx-native-conformance-contract.json --report pptx-native-conformance-report.json --repair-plan pptx-native-repair-plan.json",
     "npm run compare:recovery",
     "npm run verify:repetition-gate",
     "# Open Document_Slide_Authoring_System_new.pptx in Microsoft PowerPoint",
@@ -1504,10 +1383,6 @@ function createReadme() {
     "- Treat visual values as intentional semantic decisions when selected, and record what remains intentionally unconstrained.",
     "- Separate learner-facing artifacts, instructor/facilitator artifacts, production source, evidence tables, proof surfaces, and handoff packages.",
     "- Keep the manual PowerPoint open check as a release gate.",
-    "- Before each PPTX build, declare every core PowerPoint capability as used, intentionally_not_used, or not_applicable in `pptx-native-conformance-contract.json`.",
-    "- Use Pretendard as the default theme font, PowerPoint-native title/section/automatic-number structures, and centered/middle-aligned shape text unless a named semantic exception explains otherwise.",
-    "- Use raster images only for declared scene, illustration, texture, or type-treatment exceptions; retain equivalent text and keep semantic labels, arrows, and sequence in native objects.",
-    "- If native conformance fails, update the authored contract or generator and rebuild a fresh source family. Do not patch, convert, or resave a recovered PPTX as the source of truth.",
     "- When the compatible npm route is available, keep `system:init`, `system:run`, build, PresentationML/native checks, recovery comparison, manual open check, release check, and agent-system check in that order.",
     ""
   ].join("\n");
@@ -1537,14 +1412,6 @@ function createGeneratedCheckerSource() {
     `const REQUIRED_INTENTIONAL_IMPLEMENTATION_FIELDS = ${JSON.stringify(REQUIRED_INTENTIONAL_IMPLEMENTATION_FIELDS, null, 2)};`,
     `const REQUIRED_CALCULATED_VALUE_FIELDS = ${JSON.stringify(REQUIRED_CALCULATED_VALUE_FIELDS, null, 2)};`,
     `const REQUIRED_LAYOUT_ELEMENT_CALCULATION_FIELDS = ${JSON.stringify(REQUIRED_LAYOUT_ELEMENT_CALCULATION_FIELDS, null, 2)};`,
-    `const REQUIRED_NATIVE_OBJECT_INTENT_FIELDS = ${JSON.stringify(REQUIRED_NATIVE_OBJECT_INTENT_FIELDS, null, 2)};`,
-    `const REQUIRED_NATIVE_GEOMETRY_METRICS = ${JSON.stringify(REQUIRED_NATIVE_GEOMETRY_METRICS, null, 2)};`,
-    `const REQUIRED_NATIVE_DECISION_STATUSES = ${JSON.stringify(REQUIRED_NATIVE_DECISION_STATUSES, null, 2)};`,
-    `const REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES = ${JSON.stringify(REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES, null, 2)};`,
-    `const REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS = ${JSON.stringify(REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS, null, 2)};`,
-    `const ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES = ${JSON.stringify(ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES, null, 2)};`,
-    `const REQUIRED_CONTENT_FIT_DIMENSIONS = ${JSON.stringify(REQUIRED_CONTENT_FIT_DIMENSIONS, null, 2)};`,
-    `const REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS = ${JSON.stringify(REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS, null, 2)};`,
     `const REQUIRED_SESSION_FEEDBACK_CHECKS = ${JSON.stringify(REQUIRED_SESSION_FEEDBACK_CHECKS, null, 2)};`,
     `const REQUIRED_COURSE_FLOW_FIELDS = ${JSON.stringify(REQUIRED_COURSE_FLOW_FIELDS, null, 2)};`,
     `const REQUIRED_SLIDE_PLANNING_FIELDS = ${JSON.stringify(REQUIRED_SLIDE_PLANNING_FIELDS, null, 2)};`,
@@ -1653,45 +1520,14 @@ function createGeneratedCheckerSource() {
     "  add(checks, \"fixed decisions declared\", Array.isArray(threeLayer.fixed) && threeLayer.fixed.length >= 3, { fixed: threeLayer.fixed || [] });",
     "  add(checks, \"flexible decisions declared\", Array.isArray(threeLayer.flexible) && threeLayer.flexible.length >= 3, { flexible: threeLayer.flexible || [] });",
     "  add(checks, \"decisional decisions declared\", Array.isArray(threeLayer.decisional) && threeLayer.decisional.length >= 3, { decisional: threeLayer.decisional || [] });",
-    "  const contentFit = system.content_fit_and_expression_contract || {};",
-    "  add(checks, \"content-fit hierarchy and order\", JSON.stringify(contentFit.hierarchy || []) === JSON.stringify(REQUIRED_CONTENT_FIT_DIMENSIONS), { expected: REQUIRED_CONTENT_FIT_DIMENSIONS, actual: contentFit.hierarchy || [] });",
-    "  add(checks, \"reference benchmark is diagnostic by default\", /diagnostic only/i.test(contentFit.reference_rule || \"\") && /faithful recreation/i.test(contentFit.reference_rule || \"\"), { reference_rule: contentFit.reference_rule || null });",
-    "  add(checks, \"expression systems remain optional\", /optional/i.test(contentFit.expression_system_rule || \"\") && /Carbon/i.test(contentFit.expression_system_rule || \"\") && /not itself visualization/i.test(contentFit.expression_system_rule || \"\"), { expression_system_rule: contentFit.expression_system_rule || null });",
-    "  add(checks, \"geometry cannot prove content fit\", /cannot prove content fit/i.test(contentFit.geometry_boundary || \"\"), { geometry_boundary: contentFit.geometry_boundary || null });",
-    "  const prototype = system.prototype_authorization_contract || {};",
-    "  checkRequiredSet(checks, \"prototype authorization evidence fields\", REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS, listSet(prototype.required_evidence));",
-    "  checkRequiredSet(checks, \"prototype authorization decision statuses\", REQUIRED_NATIVE_DECISION_STATUSES, listSet(prototype.decision_statuses));",
-    "  add(checks, \"prototype authorization claim boundary\", /traceability/i.test(prototype.claim_boundary || \"\") && /human author-reviewer/i.test(prototype.claim_boundary || \"\"), { claim_boundary: prototype.claim_boundary || null });",
     "  const intentional = system.intentional_implementation_contract || {};",
     "  checkRequiredSet(checks, \"intentional implementation fields\", REQUIRED_INTENTIONAL_IMPLEMENTATION_FIELDS, listSet(intentional.required_fields));",
     "  checkRequiredSet(checks, \"calculated value fields\", REQUIRED_CALCULATED_VALUE_FIELDS, listSet(intentional.calculated_value_required_fields));",
     "  add(checks, \"intentional implementation rules\", Boolean(intentional.fixed_rule && intentional.flexible_rule && intentional.decisional_rule && intentional.implementation_rule), { has_fixed_rule: Boolean(intentional.fixed_rule), has_flexible_rule: Boolean(intentional.flexible_rule), has_decisional_rule: Boolean(intentional.decisional_rule), has_implementation_rule: Boolean(intentional.implementation_rule) });",
-    "  const nativeIntent = system.native_object_intent_contract || {};",
-    "  checkRequiredSet(checks, \"native object intent fields\", REQUIRED_NATIVE_OBJECT_INTENT_FIELDS, listSet(nativeIntent.intent_required_fields));",
-    "  checkRequiredSet(checks, \"native geometry metric fields\", REQUIRED_NATIVE_GEOMETRY_METRICS, listSet(nativeIntent.geometry_metric_fields));",
-    "  checkRequiredSet(checks, \"native decision statuses\", REQUIRED_NATIVE_DECISION_STATUSES, listSet(nativeIntent.decision_statuses));",
-    "  add(checks, \"native object intent executable boundary\", nativeIntent.evidence_state === \"observed_computation\" && Boolean(nativeIntent.fixed_rule && nativeIntent.flexible_rule && nativeIntent.decisional_rule && nativeIntent.freshness_rule), { native_object_intent_contract: nativeIntent });",
     "  const workflow = Array.isArray(system.workflow) ? system.workflow : [];",
     "  const sourceIndex = workflow.findIndex((item) => item && item.stage === \"working-source-clarification\");",
     "  const cognitiveIndex = workflow.findIndex((item) => item && item.stage === \"cognitive-authoring-packet\");",
     "  add(checks, \"working source precedes cognitive authoring\", sourceIndex >= 0 && cognitiveIndex >= 0 && sourceIndex < cognitiveIndex, { sourceIndex, cognitiveIndex });",
-    "}",
-    "",
-    "function checkPptxNativeConformanceContract(checks, system) {",
-    "  const contract = system.native_pptx_conformance_contract || {};",
-    "  add(checks, \"native conformance artifact paths\", contract.contract === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[0] && contract.report === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[1] && contract.repair_plan === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[2], { contract: contract.contract || null, report: contract.report || null, repair_plan: contract.repair_plan || null });",
-    "  checkRequiredSet(checks, \"native conformance core capability catalog\", REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES, listSet(contract.core_capabilities));",
-    "  checkRequiredSet(checks, \"native conformance capability statuses\", ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES, listSet(contract.allowed_capability_statuses));",
-    "  add(checks, \"native conformance Pretendard default\", /pretendard/i.test(contract.default_theme_font || \"\"), { default_theme_font: contract.default_theme_font || null });",
-    "  add(checks, \"native conformance automatic slide number\", contract.automatic_slide_number_mode === \"automatic_powerpoint\", { automatic_slide_number_mode: contract.automatic_slide_number_mode || null });",
-    "  const textAlignment = contract.default_text_frame_alignment || {};",
-    "  add(checks, \"native conformance centered and middle shape text default\", textAlignment.horizontal === \"center\" && textAlignment.vertical === \"middle\", { default_text_frame_alignment: textAlignment });",
-    "  add(checks, \"native conformance source-only remediation boundary\", contract.source_mutation_only === true && /fresh source family/i.test(contract.source_lineage_rule || \"\") && /never patch/i.test(contract.source_lineage_rule || \"\"), { source_mutation_only: contract.source_mutation_only === true, source_lineage_rule: contract.source_lineage_rule || null });",
-    "  add(checks, \"native conformance rules and evidence boundary\", Boolean(contract.fixed_rule && contract.flexible_rule && contract.decisional_rule) && /Microsoft PowerPoint/i.test(contract.evidence_boundary || \"\"), { has_fixed_rule: Boolean(contract.fixed_rule), has_flexible_rule: Boolean(contract.flexible_rule), has_decisional_rule: Boolean(contract.decisional_rule), evidence_boundary: contract.evidence_boundary || null });",
-    "  const workflow = Array.isArray(system.workflow) ? system.workflow : [];",
-    "  const pptxStep = workflow.find((item) => item && item.stage === \"new-pptx-native-build\") || {};",
-    "  const pptxEvidence = listSet(pptxStep.required_evidence);",
-    "  add(checks, \"PPTX build routes native conformance artifacts\", REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS.every((item) => pptxEvidence.has(item)), { required_evidence: Array.from(pptxEvidence) });",
     "}",
     "",
     "function checkCourseFlowToDesignSystemContract(checks, system) {",
@@ -1725,7 +1561,7 @@ function createGeneratedCheckerSource() {
     "  add(checks, \"slide planning stage requires slide-planning-map\", slideEvidence.has(\"slide-planning-map.json\"), { required_evidence: Array.from(slideEvidence) });",
     "  add(checks, \"symbol stage requires symbol-inventory\", symbolEvidence.has(\"symbol-inventory.json\"), { required_evidence: Array.from(symbolEvidence) });",
     "  add(checks, \"semantic design stage requires upstream maps\", [\"course-flow-map.md\", \"slide-planning-map.json\", \"symbol-inventory.json\", \"semantic-design-system.json\"].every((item) => designEvidence.has(item)), { required_evidence: Array.from(designEvidence) });",
-    "  add(checks, \"PPTX build requires planning, design, native intent, and native audit evidence\", [\"slide-planning-map.json\", \"symbol-inventory.json\", \"semantic-design-system.json\", \"native-object-intent-plan.json\", \"native-object-audit.json\"].every((item) => pptxEvidence.has(item)), { required_evidence: Array.from(pptxEvidence) });",
+    "  add(checks, \"PPTX build requires planning and design maps\", [\"slide-planning-map.json\", \"symbol-inventory.json\", \"semantic-design-system.json\"].every((item) => pptxEvidence.has(item)), { required_evidence: Array.from(pptxEvidence) });",
     "}",
     "",
     "function checkSessionFeedbackContract(checks, system) {",
@@ -1810,7 +1646,7 @@ function createGeneratedCheckerSource() {
     "  checkRequiredSet(checks, \"compatible npm accepted release statuses declared\", COMPATIBLE_NPM_ACCEPTED_RELEASE_STATUSES, statuses);",
     "  add(checks, \"compatible npm rebuild warning declared\", /npm test/i.test(process.rebuild_warning || \"\") && /build/i.test(process.rebuild_warning || \"\") && /open check|PowerPoint/i.test(process.rebuild_warning || \"\"), { rebuild_warning: process.rebuild_warning || null });",
     "  const toolSet = ids(system.tools);",
-    "  checkRequiredSet(checks, \"compatible npm command tools declared\", [\"system-init\", \"system-run\", \"pptx-build\", \"presentationml-spec-check\", \"research-build\", \"research-check\", \"native-powerpoint-check\", \"native-object-geometry-check\", \"pptx-native-conformance-check\", \"recovery-compare-check\", \"repetition-gate-check\", \"release-check\", \"agent-system-check\", \"manual-powerpoint-open-check\"], toolSet);",
+    "  checkRequiredSet(checks, \"compatible npm command tools declared\", [\"system-init\", \"system-run\", \"pptx-build\", \"presentationml-spec-check\", \"research-build\", \"research-check\", \"native-powerpoint-check\", \"recovery-compare-check\", \"repetition-gate-check\", \"release-check\", \"agent-system-check\", \"manual-powerpoint-open-check\"], toolSet);",
     "  const workflow = Array.isArray(system.workflow) ? system.workflow : [];",
     "  const pptxStep = workflow.find((item) => item && item.stage === \"new-pptx-native-build\") || {};",
     "  const pptxEvidence = listSet(pptxStep.required_evidence);",
@@ -1844,7 +1680,6 @@ function createGeneratedCheckerSource() {
     "  checkRequiredSet(checks, \"required release gates\", REQUIRED_RELEASE_GATES, ids(system.release_gates));",
     "  checkWorkflowOrderContract(checks, system);",
     "  checkWorkingSourceContract(checks, system);",
-    "  checkPptxNativeConformanceContract(checks, system);",
     "  checkCourseFlowToDesignSystemContract(checks, system);",
     "  checkCognitiveAuthoringContract(checks, system);",
     "  checkOutlineNoteContract(checks, system);",
@@ -2139,26 +1974,6 @@ function checkWorkingSourceContract(checks, system) {
   addCheck(checks, "decisional decisions declared", Array.isArray(threeLayer.decisional) && threeLayer.decisional.length >= 3, {
     decisional: threeLayer.decisional || []
   });
-  const contentFit = system.content_fit_and_expression_contract || {};
-  addCheck(checks, "content-fit hierarchy and order", JSON.stringify(contentFit.hierarchy || []) === JSON.stringify(REQUIRED_CONTENT_FIT_DIMENSIONS), {
-    expected: REQUIRED_CONTENT_FIT_DIMENSIONS,
-    actual: contentFit.hierarchy || []
-  });
-  addCheck(checks, "reference benchmark is diagnostic by default", /diagnostic only/i.test(contentFit.reference_rule || "") && /faithful recreation/i.test(contentFit.reference_rule || ""), {
-    reference_rule: contentFit.reference_rule || null
-  });
-  addCheck(checks, "expression systems remain optional", /optional/i.test(contentFit.expression_system_rule || "") && /Carbon/i.test(contentFit.expression_system_rule || "") && /not itself visualization/i.test(contentFit.expression_system_rule || ""), {
-    expression_system_rule: contentFit.expression_system_rule || null
-  });
-  addCheck(checks, "geometry cannot prove content fit", /cannot prove content fit/i.test(contentFit.geometry_boundary || ""), {
-    geometry_boundary: contentFit.geometry_boundary || null
-  });
-  const prototype = system.prototype_authorization_contract || {};
-  checkRequiredSet(checks, "prototype authorization evidence fields", REQUIRED_PROTOTYPE_AUTHORIZATION_FIELDS, listSet(prototype.required_evidence));
-  checkRequiredSet(checks, "prototype authorization decision statuses", REQUIRED_NATIVE_DECISION_STATUSES, listSet(prototype.decision_statuses));
-  addCheck(checks, "prototype authorization claim boundary", /traceability/i.test(prototype.claim_boundary || "") && /human author-reviewer/i.test(prototype.claim_boundary || ""), {
-    claim_boundary: prototype.claim_boundary || null
-  });
   const intentional = system.intentional_implementation_contract || {};
   checkRequiredSet(checks, "intentional implementation fields", REQUIRED_INTENTIONAL_IMPLEMENTATION_FIELDS, listSet(intentional.required_fields));
   checkRequiredSet(checks, "calculated value fields", REQUIRED_CALCULATED_VALUE_FIELDS, listSet(intentional.calculated_value_required_fields));
@@ -2169,17 +1984,6 @@ function checkWorkingSourceContract(checks, system) {
     has_implementation_rule: Boolean(intentional.implementation_rule)
   });
 
-  const nativeIntent = system.native_object_intent_contract || {};
-  checkRequiredSet(checks, "native object intent fields", REQUIRED_NATIVE_OBJECT_INTENT_FIELDS, listSet(nativeIntent.intent_required_fields));
-  checkRequiredSet(checks, "native geometry metric fields", REQUIRED_NATIVE_GEOMETRY_METRICS, listSet(nativeIntent.geometry_metric_fields));
-  checkRequiredSet(checks, "native decision statuses", REQUIRED_NATIVE_DECISION_STATUSES, listSet(nativeIntent.decision_statuses));
-  addCheck(
-    checks,
-    "native object intent executable boundary",
-    nativeIntent.evidence_state === "observed_computation" && Boolean(nativeIntent.fixed_rule && nativeIntent.flexible_rule && nativeIntent.decisional_rule && nativeIntent.freshness_rule),
-    { native_object_intent_contract: nativeIntent }
-  );
-
   const workflow = Array.isArray(system.workflow) ? system.workflow : [];
   const sourceIndex = workflow.findIndex((item) => item && item.stage === "working-source-clarification");
   const cognitiveIndex = workflow.findIndex((item) => item && item.stage === "cognitive-authoring-packet");
@@ -2187,79 +1991,6 @@ function checkWorkingSourceContract(checks, system) {
     sourceIndex,
     cognitiveIndex
   });
-}
-
-function checkPptxNativeConformanceContract(checks, system) {
-  const contract = system.native_pptx_conformance_contract || {};
-  addCheck(
-    checks,
-    "native conformance artifact paths",
-    contract.contract === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[0] &&
-      contract.report === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[1] &&
-      contract.repair_plan === REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS[2],
-    { contract: contract.contract || null, report: contract.report || null, repair_plan: contract.repair_plan || null }
-  );
-  checkRequiredSet(
-    checks,
-    "native conformance core capability catalog",
-    REQUIRED_PPTX_NATIVE_CONFORMANCE_CAPABILITIES,
-    listSet(contract.core_capabilities)
-  );
-  checkRequiredSet(
-    checks,
-    "native conformance capability statuses",
-    ALLOWED_PPTX_NATIVE_CAPABILITY_STATUSES,
-    listSet(contract.allowed_capability_statuses)
-  );
-  addCheck(checks, "native conformance Pretendard default", /pretendard/i.test(contract.default_theme_font || ""), {
-    default_theme_font: contract.default_theme_font || null
-  });
-  addCheck(
-    checks,
-    "native conformance automatic slide number",
-    contract.automatic_slide_number_mode === "automatic_powerpoint",
-    { automatic_slide_number_mode: contract.automatic_slide_number_mode || null }
-  );
-  const textAlignment = contract.default_text_frame_alignment || {};
-  addCheck(
-    checks,
-    "native conformance centered and middle shape text default",
-    textAlignment.horizontal === "center" && textAlignment.vertical === "middle",
-    { default_text_frame_alignment: textAlignment }
-  );
-  addCheck(
-    checks,
-    "native conformance source-only remediation boundary",
-    contract.source_mutation_only === true &&
-      /fresh source family/i.test(contract.source_lineage_rule || "") &&
-      /never patch/i.test(contract.source_lineage_rule || ""),
-    {
-      source_mutation_only: contract.source_mutation_only === true,
-      source_lineage_rule: contract.source_lineage_rule || null
-    }
-  );
-  addCheck(
-    checks,
-    "native conformance rules and evidence boundary",
-    Boolean(contract.fixed_rule && contract.flexible_rule && contract.decisional_rule) &&
-      /Microsoft PowerPoint/i.test(contract.evidence_boundary || ""),
-    {
-      has_fixed_rule: Boolean(contract.fixed_rule),
-      has_flexible_rule: Boolean(contract.flexible_rule),
-      has_decisional_rule: Boolean(contract.decisional_rule),
-      evidence_boundary: contract.evidence_boundary || null
-    }
-  );
-
-  const workflow = Array.isArray(system.workflow) ? system.workflow : [];
-  const pptxStep = workflow.find((item) => item && item.stage === "new-pptx-native-build") || {};
-  const pptxEvidence = listSet(pptxStep.required_evidence);
-  addCheck(
-    checks,
-    "PPTX build routes native conformance artifacts",
-    REQUIRED_PPTX_NATIVE_CONFORMANCE_ARTIFACTS.every((item) => pptxEvidence.has(item)),
-    { required_evidence: Array.from(pptxEvidence) }
-  );
 }
 
 function checkCourseFlowToDesignSystemContract(checks, system) {
@@ -2330,8 +2061,8 @@ function checkCourseFlowToDesignSystemContract(checks, system) {
   );
   addCheck(
     checks,
-    "PPTX build requires planning, design, native intent, and native audit evidence",
-    ["slide-planning-map.json", "symbol-inventory.json", "semantic-design-system.json", "native-object-intent-plan.json", "native-object-audit.json"].every((item) => pptxEvidence.has(item)),
+    "PPTX build requires planning and design maps",
+    ["slide-planning-map.json", "symbol-inventory.json", "semantic-design-system.json"].every((item) => pptxEvidence.has(item)),
     { required_evidence: Array.from(pptxEvidence) }
   );
 }
@@ -2497,8 +2228,6 @@ function checkCompatibleNpmProcessContract(checks, system) {
     "research-build",
     "research-check",
     "native-powerpoint-check",
-    "native-object-geometry-check",
-    "pptx-native-conformance-check",
     "recovery-compare-check",
     "repetition-gate-check",
     "release-check",
@@ -2563,7 +2292,6 @@ function checkTarget(targetRoot, options = {}) {
   checkRequiredSet(checks, "required release gates", REQUIRED_RELEASE_GATES, ids(system.release_gates));
   checkWorkflowOrderContract(checks, system);
   checkWorkingSourceContract(checks, system);
-  checkPptxNativeConformanceContract(checks, system);
   checkCourseFlowToDesignSystemContract(checks, system);
   checkCognitiveAuthoringContract(checks, system);
   checkOutlineNoteContract(checks, system);
@@ -2667,22 +2395,11 @@ function selfcheck() {
     "references/concept-map.md",
     "references/cognitive-authoring-process.md",
     "references/course-flow-to-design-system-sequence.md",
-    "references/design-systems.md",
-    "references/pptx-native-object-authoring.md",
-    "references/pptx-native-conformance-and-self-remediation.md",
     "references/pptx-standard-xml-generation.md",
-    "references/prototype-authorization-contract.md",
-    "references/retrospective-strategy-sequencing-20260710.md",
     "references/session-feedback-and-surface-gates.md",
     "references/semantic-staging-design-framework.md",
     "references/source-notes.md",
-    "references/source-first-regeneration.md",
-    "references/slide-authoring-methods.md",
-    "references/checklist.md",
-    "scripts/audit_pptx_native_objects.py",
-    "scripts/validate_pptx_native_conformance.py",
-    "scripts/validate_authoring_prototype_gate.py",
-    "scripts/validate_visual_silhouette_budget.py"
+    "references/slide-authoring-methods.md"
   ];
 
   addCheck(checks, "SKILL.md exists", fs.existsSync(path.join(skillRoot, "SKILL.md")), { path: "SKILL.md" });

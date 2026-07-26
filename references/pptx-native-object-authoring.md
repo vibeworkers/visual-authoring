@@ -23,6 +23,7 @@ PowerPoint native는 “편집 가능한 도형이 몇 개 있는가”가 아�
     "spacing_tolerance_ratio": 0.15,
     "spacing_tolerance_pt_when_zero": 1.5,
     "overlap_epsilon_ratio": 0.01,
+    "unplanned_text_overlap_epsilon_ratio": 0.01,
     "connector_endpoint_tolerance_pt": 3,
     "minimum_native_unit_coverage": 0,
     "minimum_required_relation_coverage": 1
@@ -55,6 +56,7 @@ PowerPoint native는 “편집 가능한 도형이 몇 개 있는가”가 아�
       ]
     }
   ],
+  "overlap_exceptions": [],
   "waivers": []
 }
 ```
@@ -75,6 +77,24 @@ PowerPoint native는 “편집 가능한 도형이 몇 개 있는가”가 아�
 | `raster_exception_reason` | image/hybrid 예외의 의미·편집성 손실 이유 |
 
 객체 이름은 사람이 PowerPoint Selection Pane에서 이해할 수 있는 semantic name을 사용한다. 자동 생성된 `Rectangle 17` 같은 이름만으로 intent coverage를 닫지 않는다.
+
+### 선언하지 않은 텍스트 겹침 차단
+
+선언된 `separate` 관계만 검사하면, 서로 다른 카드·라벨이 intent plan에 직접 연결되지 않았을 때 겹침을 놓칠 수 있다. 감사기는 같은 슬라이드의 서로 다른 native text object를 모두 비교하고, 교차 면적이 더 작은 bbox의 `unplanned_text_overlap_epsilon_ratio`를 넘으면 `unplanned_text_overlap`으로 차단한다.
+
+의도적으로 글자를 겹쳐 연출해야 할 때만 다음처럼 두 semantic object name과 이유를 함께 선언한다. 일반 `waiver`로 계산 결과를 숨기지 않는다.
+
+```json
+"overlap_exceptions": [
+  {
+    "slide_number": 4,
+    "object_names": ["Title: S04", "Typography Accent: S04"],
+    "reason": "두 텍스트는 같은 문장을 겹쳐 보이는 의도적 타이포그래피 레이어다."
+  }
+]
+```
+
+이 예외는 **정확히 두 개의 이름**과 비어 있지 않은 이유를 요구한다. 이름이 없거나 중복된 예외는 intent schema에서 막는다. bbox 겹침 검사는 실제 glyph·줄바꿈·폰트 fallback을 볼 수 없으므로, 이 통과도 render/PowerPoint visual review를 대신하지 않는다.
 
 ## 의도적으로 다룰 PowerPoint 기능
 
@@ -108,6 +128,7 @@ PowerPoint native는 “편집 가능한 도형이 몇 개 있는가”가 아�
 
 - `out_of_bounds_non_bleed_count`: `inside_safe_area` 객체가 safe area를 벗어난 수.
 - `unintended_overlap_count`: `separate` 관계의 두 객체 교차 면적이 허용치를 넘은 수.
+- `unplanned_text_overlap_count`: 선언된 예외가 없는 서로 다른 native text object의 bbox 교차가 허용치를 넘은 수.
 - `overlap_ratio = intersection_area / min(area_a, area_b)`.
 - `max_alignment_error_pt`: 선언한 alignment edge/center 사이 거리의 최대값.
 - `max_spacing_deviation_ratio = |actual_gap - target_gap| / target_gap`. 목표가 0이면 절대 오차를 쓴다.
@@ -138,6 +159,7 @@ PowerPoint native는 “편집 가능한 도형이 몇 개 있는가”가 아�
 
 - `out_of_bounds_non_bleed_count = 0`
 - `unintended_overlap_count = 0`
+- `unplanned_text_overlap_count = 0`
 - `detached_required_connector_count = 0`
 - `critical_native_missing_count = 0`
 - `critical_object_type_mismatch_count = 0`
@@ -150,7 +172,7 @@ Noncritical coverage 목표와 tolerance는 프로젝트가 빌드 전에 `minim
 
 ## Waiver
 
-Waiver는 측정값을 지우거나 pass로 바꾸지 않는다. 다음 필드가 필요하다.
+Waiver는 측정값을 지우거나 pass로 바꾸지 않는다. 의도적인 text-on-text 연출은 위 `overlap_exceptions`에서 이름 두 개와 이유로만 다룬다. 일반 waiver는 다음 필드가 필요하다.
 
 ```yaml
 slide_number: 4

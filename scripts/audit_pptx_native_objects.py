@@ -9,6 +9,7 @@ not claim content fit, visual quality, edit-session success, or learner outcome.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -38,6 +39,7 @@ DEFAULT_THRESHOLDS = {
     "spacing_tolerance_ratio": 0.15,
     "spacing_tolerance_pt_when_zero": 1.5,
     "overlap_epsilon_ratio": 0.01,
+    "unplanned_text_overlap_epsilon_ratio": 0.01,
     "connector_endpoint_tolerance_pt": 3.0,
     "minimum_native_unit_coverage": 0.0,
     "minimum_required_relation_coverage": 1.0,
@@ -397,6 +399,26 @@ def box_from_object(item: dict[str, Any]) -> Box | None:
     return Box(bbox["x_pt"], bbox["y_pt"], bbox["w_pt"], bbox["h_pt"])
 
 
+def overlap_exception_pair(left: str, right: str) -> tuple[str, str]:
+    """Return a stable name pair for an intentional text-on-text overlay."""
+    return tuple(sorted((left, right)))
+
+
+def object_label(item: dict[str, Any]) -> str:
+    """Use the semantic object name when present, never an empty exception key."""
+    name = item.get("name")
+    return str(name) if name else f"object_id:{item.get('object_id', 'unknown')}"
+
+
+def intentional_text_overlap_pairs(intent: dict[str, Any]) -> dict[int, set[tuple[str, str]]]:
+    pairs: dict[int, set[tuple[str, str]]] = {}
+    for exception in intent.get("overlap_exceptions", []):
+        slide_number = int(exception["slide_number"])
+        left, right = [str(name) for name in exception["object_names"]]
+        pairs.setdefault(slide_number, set()).add(overlap_exception_pair(left, right))
+    return pairs
+
+
 def type_matches(expected: str, actual: str) -> bool:
     if expected in {"", "any", "any_object"}:
         return True
@@ -500,6 +522,29 @@ def validate_intent(intent: Any) -> tuple[list[str], list[str]]:
             for name in names or []:
                 if re.fullmatch(r"(?i)(rectangle|text|shape|picture|group)\s*\d+", str(name).strip()):
                     warnings.append(f"{prefix}: generic object name is not semantic: {name}")
+    overlap_exceptions = intent.get("overlap_exceptions", [])
+    if not isinstance(overlap_exceptions, list):
+        errors.append("overlap_exceptions must be an array when present")
+    else:
+        seen_exception_pairs: set[tuple[int, tuple[str, str]]] = set()
+        for exception_index, exception in enumerate(overlap_exceptions):
+            prefix = f"overlap_exceptions[{exception_index}]"
+            if not isinstance(exception, dict):
+                errors.append(f"{prefix} must be an object")
+                continue
+            slide_number = exception.get("slide_number")
+            if not isinstance(slide_number, int) or slide_number not in seen_slides:
+                errors.append(f"{prefix}.slide_number must refer to an intent slide")
+            names = exception.get("object_names")
+            if not isinstance(names, list) or len(names) != 2 or len({str(name).strip() for name in names}) != 2 or any(not str(name).strip() for name in names):
+                errors.append(f"{prefix}.object_names must contain exactly two distinct, non-empty object names")
+                continue
+            if not isinstance(exception.get("reason"), str) or not exception["reason"].strip():
+                errors.append(f"{prefix}.reason is required")
+            key = (slide_number, overlap_exception_pair(str(names[0]), str(names[1])))
+            if key in seen_exception_pairs:
+                errors.append(f"{prefix} duplicates an earlier intentional text-overlap exception")
+            seen_exception_pairs.add(key)
     if not isinstance(intent.get("waivers"), list):
         errors.append("waivers must be an array")
     return errors, warnings
@@ -515,10 +560,11 @@ def audit_with_intent(inventory: dict[str, Any], intent: dict[str, Any]) -> dict
     critical_units = covered_critical_units = 0
     total_relations = passed_relations = 0
     critical_missing = critical_type_mismatch = critical_relation_missing = 0
-    out_of_bounds = unintended_overlap = detached_connectors = 0
+    out_of_bounds = unintended_overlap = unplanned_text_overlap = detached_connectors = 0
     alignment_errors: list[float] = []
     spacing_deviations: list[float] = []
     raster_units = 0
+    intentional_text_overlaps = intentional_text_overlap_pairs(intent)
 
     for slide_plan in intent.get("slides", []):
         number = int(slide_plan.get("slide_number", 0))
@@ -651,6 +697,43 @@ def audit_with_intent(inventory: dict[str, Any], intent: dict[str, Any]) -> dict
                 if critical:
                     covered_critical_units += 1
 
+        text_overlap_epsilon = float(thresholds["unplanned_text_overlap_epsilon_ratio"])
+        slide_unplanned_text_overlap = 0
+        text_objects = [
+            item
+            for item in slide["objects"]
+            if item.get("type") == "text" and (box_from_object(item) is not None and box_from_object(item).area > 0)
+        ]
+        allowed_pairs = intentional_text_overlaps.get(number, set())
+        for left_index, left in enumerate(text_objects):
+            left_box = box_from_object(left)
+            if left_box is None:
+                continue
+            for right in text_objects[left_index + 1:]:
+                right_box = box_from_object(right)
+                if right_box is None:
+                    continue
+                ratio = overlap_ratio(left_box, right_box)
+                if ratio <= text_overlap_epsilon:
+                    continue
+                names = overlap_exception_pair(object_label(left), object_label(right))
+                if names in allowed_pairs:
+                    continue
+                slide_unplanned_text_overlap += 1
+                unplanned_text_overlap += 1
+                add_finding(
+                    findings,
+                    number,
+                    "unplanned_text_overlap",
+                    "unplanned_text_overlap",
+                    "Distinct native text objects overlap without an explicit, reasoned exception",
+                    object_names=list(names),
+                    object_ids=[left.get("object_id"), right.get("object_id")],
+                    overlap_ratio=q1(ratio),
+                    intersection_area_pt2=q1(intersection_area(left_box, right_box)),
+                    epsilon_ratio=text_overlap_epsilon,
+                )
+
         critical_read_order_mismatch = 0
         declared = [
             (int(state["unit"].get("reading_order")), unit_id, min((item["order"] for item in state["objects"]), default=math.inf))
@@ -664,11 +747,13 @@ def audit_with_intent(inventory: dict[str, Any], intent: dict[str, Any]) -> dict
                 critical_read_order_mismatch += 1
                 add_finding(findings, number, unit_id, "read_order_mismatch", "Critical declared reading order differs from top-level XML object order", expected=expected_order, actual=actual_order)
         slide["critical_read_order_mismatch_count"] = critical_read_order_mismatch
+        slide["unplanned_text_overlap_count"] = slide_unplanned_text_overlap
 
     critical_read_order_total = sum(item.get("critical_read_order_mismatch_count", 0) for item in inventory["slides"])
     metrics = {
         "out_of_bounds_non_bleed_count": out_of_bounds,
         "unintended_overlap_count": unintended_overlap,
+        "unplanned_text_overlap_count": unplanned_text_overlap,
         "max_alignment_error_pt": q1(max(alignment_errors)) if alignment_errors else "not_applicable",
         "max_spacing_deviation_ratio_or_pt": q1(max(spacing_deviations)) if spacing_deviations else "not_applicable",
         "detached_required_connector_count": detached_connectors,
@@ -711,6 +796,7 @@ def audit_with_intent(inventory: dict[str, Any], intent: dict[str, Any]) -> dict
     blockers = (
         out_of_bounds
         + unintended_overlap
+        + unplanned_text_overlap
         + detached_connectors
         + critical_missing
         + critical_type_mismatch
@@ -793,8 +879,8 @@ def self_test() -> dict[str, Any]:
                 "slide_number": 1,
                 "object_density_per_million_pt2": 6.9,
                 "objects": [
-                    {"object_id": 2, "name": "VA_TITLE", "type": "shape", "order": 0, "bbox": {"x_pt": 40.0, "y_pt": 30.0, "w_pt": 300.0, "h_pt": 40.0}, "connector_target_ids": []},
-                    {"object_id": 3, "name": "VA_BODY", "type": "shape", "order": 1, "bbox": {"x_pt": 40.0, "y_pt": 100.0, "w_pt": 300.0, "h_pt": 180.0}, "connector_target_ids": []},
+                    {"object_id": 2, "name": "VA_TITLE", "type": "text", "order": 0, "bbox": {"x_pt": 40.0, "y_pt": 30.0, "w_pt": 300.0, "h_pt": 40.0}, "connector_target_ids": []},
+                    {"object_id": 3, "name": "VA_BODY", "type": "text", "order": 1, "bbox": {"x_pt": 40.0, "y_pt": 100.0, "w_pt": 300.0, "h_pt": 180.0}, "connector_target_ids": []},
                 ],
             }
         ],
@@ -814,7 +900,7 @@ def self_test() -> dict[str, Any]:
                         "semantic_role": "assertion",
                         "criticality": "critical",
                         "native_requirement": "required",
-                        "expected_native_type": "shape",
+                        "expected_native_type": "text",
                         "planned_object_names": ["VA_TITLE"],
                         "edit_boundary": "text_and_position",
                         "group_name": None,
@@ -833,7 +919,7 @@ def self_test() -> dict[str, Any]:
                         "semantic_role": "evidence",
                         "criticality": "critical",
                         "native_requirement": "required",
-                        "expected_native_type": "shape",
+                        "expected_native_type": "text",
                         "planned_object_names": ["VA_BODY"],
                         "edit_boundary": "text_and_position",
                         "group_name": None,
@@ -852,6 +938,21 @@ def self_test() -> dict[str, Any]:
     }
     schema_errors, schema_warnings = validate_intent(intent)
     intent_result = audit_with_intent(inventory, intent)
+    overlap_inventory = copy.deepcopy(inventory)
+    overlap_inventory["slides"][0]["objects"].append(
+        {"object_id": 4, "name": "VA_CALLOUT", "type": "text", "order": 2, "bbox": {"x_pt": 80.0, "y_pt": 120.0, "w_pt": 220.0, "h_pt": 80.0}, "connector_target_ids": []}
+    )
+    unplanned_overlap_result = audit_with_intent(overlap_inventory, intent)
+    waived_overlap_intent = copy.deepcopy(intent)
+    waived_overlap_intent["overlap_exceptions"] = [
+        {
+            "slide_number": 1,
+            "object_names": ["VA_BODY", "VA_CALLOUT"],
+            "reason": "의도한 텍스트 겹침을 실험 fixture에서 명시한다.",
+        }
+    ]
+    waived_overlap_errors, _ = validate_intent(waived_overlap_intent)
+    waived_overlap_result = audit_with_intent(overlap_inventory, waived_overlap_intent)
     checks = {
         "horizontal_gap": horizontal_gap(a, b) == 10,
         "vertical_gap": vertical_gap(a, b) == 0,
@@ -867,6 +968,8 @@ def self_test() -> dict[str, Any]:
         "intent_native_coverage": intent_result["metrics"]["critical_native_coverage"] == 1.0,
         "intent_relation_coverage": intent_result["metrics"]["required_relation_coverage"] == 1.0,
         "intent_claim_boundary": "does not prove content fit" in intent_result["claim_boundary"],
+        "unplanned_text_overlap_rejected": unplanned_overlap_result["status"] == "revise" and unplanned_overlap_result["metrics"]["unplanned_text_overlap_count"] == 1,
+        "reasoned_text_overlap_exception": not waived_overlap_errors and waived_overlap_result["status"] == "pass_local" and waived_overlap_result["metrics"]["unplanned_text_overlap_count"] == 0,
     }
     failed = [name for name, passed in checks.items() if not passed]
     return {"status": "pass" if not failed else "fail", "checks": checks, "failed": failed}

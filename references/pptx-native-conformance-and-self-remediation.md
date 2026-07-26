@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | `slide_master_layout_theme` | master, layout, theme part | 한 장짜리 이미지 배포물처럼 PPTX가 delivery format이 아닐 때 |
 | `theme_font_scheme` | major/minor Latin·East Asian font face | target medium이 PPTX가 아닐 때 |
-| `title_placeholder` | 모든 슬라이드의 native title placeholder | 독자가 읽을 PPTX가 아닐 때 |
+| `title_placeholder` | 모든 슬라이드의 native title placeholder | custom layout이 placeholder를 안전하게 만들 수 없고, `navigation.title_source`가 이름 있는 native text shape를 한 장에 하나씩 가리킬 때 |
 | `outline_navigation` | native section list, TOC, 순서화된 title story | 한 장짜리 독립 슬라이드일 때 |
 | `automatic_slide_number` | master/layout의 `sldNum` placeholder 또는 native slide-number field | 페이지 개념이 없는 단일 장면일 때 |
 | `speaker_notes` | notes part | 발표·진행 정보가 전혀 없을 때 |
@@ -48,10 +48,10 @@
 
 1. `direction_statement`: 제목 흐름이 독자를 어디로 데려가는지 한 문장으로 적는다.
 2. `sections`: section id, title, start slide을 순서대로 적는다.
-3. `title_sequence`: 실제 native title placeholder와 일치하는 슬라이드별 제목을 순서대로 적는다.
+3. `title_sequence`: 실제 native title source와 일치하는 슬라이드별 제목을 순서대로 적는다. 기본 source는 native title placeholder다.
 4. `toc_entries`: 어느 TOC 슬라이드에 어느 section title이 나타나는지 적는다.
 
-정적 텍스트만으로 목차를 흉내 내지 않는다. PowerPoint native section list, title placeholder, TOC native text, automatic slide number를 함께 쓴다. 새 슬라이드를 끼우거나 순서를 바꾸면 title story, section start, TOC, 쪽번호 증거를 모두 stale로 처리한다.
+정적 텍스트만으로 목차를 흉내 내지 않는다. PowerPoint native section list, title source, TOC native text, automatic slide number를 함께 쓴다. 기본 title source는 title placeholder다. 다만 placeholder를 source 단계에서 안전하게 만들 수 없는 custom layout은 `title_placeholder: intentionally_not_used`와 함께 `navigation.title_source`에 `mode: named_native_shape`, `object_name_prefix`, 이유를 적는다. 해당 prefix와 맞는 수정 가능한 native text shape가 매 슬라이드에 정확히 하나 있어야 한다. 새 슬라이드를 끼우거나 순서를 바꾸면 title story, section start, TOC, 쪽번호 증거를 모두 stale로 처리한다.
 
 ## Contract Shape
 
@@ -81,6 +81,7 @@
   "navigation": {
     "direction_statement": "From the reader problem to the decision and next action.",
     "sections": [{"section_id": "why", "title": "Why", "start_slide": 1}],
+    "title_source": {"mode": "native_title_placeholder"},
     "title_sequence": [{"slide_number": 1, "title": "Start with the reader"}],
     "toc_entries": [{"toc_slide_number": 1, "section_title": "Why"}]
   },
@@ -113,11 +114,14 @@
 ```text
 exact PPTX + conformance contract
   -> deterministic package/feature audit
+  -> native-object geometry audit (including undeclared text overlap)
   -> repair_required report + source-level repair plan
   -> update authored source / manifest / compiler
   -> new source_family_id + fresh build
   -> rerun audits, render proof, and manual PowerPoint open
 ```
+
+geometry audit가 `unplanned_text_overlap` 또는 선언한 `separate` 위반을 찾으면, PPTX XML을 덮어쓰지 않는다. 겹친 object name·좌표·교차 비율을 report에 남기고, 카드 폭·행 위치·여백처럼 **저작 원본의 geometry 규칙**을 고친 뒤 새 source family로 빌드한다. 의도한 text-on-text 연출만 `native-object-intent-plan.json`의 `overlap_exceptions`에 두 이름과 이유를 적어 예외로 선언한다.
 
 상태는 다음처럼 읽는다.
 

@@ -9,7 +9,8 @@ SCHEMA = "visual-authoring.decision-preview.v1"
 PHASES = {f"phase_{index}" for index in range(6)}
 SOURCE_CHOICES = {"continue_improve", "fresh_start", "not_applicable_no_existing_work"}
 SELECTION_STATUSES = {"user_selected", "reexplore_requested", "blocked_preview_generation"}
-CREDIT_CHOICES = {"include_author_credit", "omit_author_credit", "custom_credit"}
+CREDIT_CHOICES = {"include_author_credit", "omit_author_credit", "custom_credit", "pending_release_decision"}
+CREDIT_STAGES = {"not_at_release_gate", "pre_release"}
 HCI_CRITERIA = {
     "contrast",
     "legibility",
@@ -160,13 +161,23 @@ def validate(packet, root):
     validate_tooling(packet, root, errors)
 
     credit = packet.get("release_credit", {})
-    if credit.get("release_stage") != "pre_release":
-        errors.append("release_credit.release_stage must be pre_release")
-    if credit.get("choice") not in CREDIT_CHOICES:
+    credit_stage = credit.get("release_stage")
+    credit_choice = credit.get("choice")
+    if credit_stage not in CREDIT_STAGES:
+        errors.append(f"release_credit.release_stage must be one of {sorted(CREDIT_STAGES)}")
+    if credit_choice not in CREDIT_CHOICES:
         errors.append(f"release_credit.choice must be one of {sorted(CREDIT_CHOICES)}")
-    if not nonempty(credit.get("confirmed_by")):
-        errors.append("release_credit.confirmed_by must be non-empty")
-    if credit.get("choice") == "custom_credit":
+    if credit_choice == "pending_release_decision":
+        if credit_stage != "not_at_release_gate":
+            errors.append("pending_release_decision requires release_stage=not_at_release_gate")
+        if credit.get("decision_due") != "release_gate":
+            errors.append("pending_release_decision requires decision_due=release_gate")
+    else:
+        if credit_stage != "pre_release":
+            errors.append("a confirmed credit choice requires release_stage=pre_release")
+        if not nonempty(credit.get("confirmed_by")):
+            errors.append("release_credit.confirmed_by must be non-empty for a confirmed credit choice")
+    if credit_choice == "custom_credit":
         for field in ("credit_text", "placement"):
             if not nonempty(credit.get(field)):
                 errors.append(f"release_credit.{field} is required for custom_credit")
@@ -185,9 +196,41 @@ def validate(packet, root):
 
 def main():
     parser = argparse.ArgumentParser(description="Validate a visual-authoring decision-preview packet.")
-    parser.add_argument("packet", help="JSON decision packet")
+    parser.add_argument("packet", nargs="?", help="JSON decision packet")
     parser.add_argument("--root", default=".", help="root for relative preview paths")
+    parser.add_argument("--self-test", action="store_true", help="Validate the pass, pending-credit, and bypass fixtures")
     args = parser.parse_args()
+    if args.self_test:
+        fixture_root = Path(__file__).resolve().parents[1] / "fixtures"
+        checks = []
+        for fixture_name, expected_status in (
+            ("decision-preview-valid.json", "pass_local"),
+            ("decision-preview-pending-credit-valid.json", "pass_local"),
+            ("decision-preview-invalid-bypass.json", "fail_local"),
+        ):
+            try:
+                packet = json.loads((fixture_root / fixture_name).read_text(encoding="utf-8"))
+                errors = validate(packet, fixture_root)
+                actual_status = "pass_local" if not errors else "fail_local"
+            except (OSError, json.JSONDecodeError) as exc:
+                errors = [str(exc)]
+                actual_status = "fail_local"
+            checks.append({
+                "fixture": fixture_name,
+                "expected": expected_status,
+                "actual": actual_status,
+                "passed": actual_status == expected_status,
+                "errors": errors,
+            })
+        result = {
+            "status": "pass" if all(check["passed"] for check in checks) else "fail",
+            "checks": checks,
+            "claim_boundary": "This validates decision-packet fixtures only. It does not run adapters, show a preview, or approve release.",
+        }
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        raise SystemExit(0 if result["status"] == "pass" else 1)
+    if not args.packet:
+        parser.error("packet is required unless --self-test is used")
     packet_path = Path(args.packet)
     root = Path(args.root)
     try:

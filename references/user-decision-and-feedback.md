@@ -38,7 +38,7 @@
 
 ## Release credit decision
 
-릴리즈 직전 `include_author_credit`, `omit_author_credit`, `custom_credit` 중 하나를 명시적으로 확인한다. `custom_credit`에는 표기 문구와 위치가 필요하다. 모델·도구 provider, source provenance, output brand는 저자 표기와 다른 필드이며 자동 변환하지 않는다.
+아직 릴리즈 게이트에 들어가지 않은 초안은 결정을 앞당겨 추정하지 않는다. 이때 packet에는 `release_stage: not_at_release_gate`, `choice: pending_release_decision`, `decision_due: release_gate`를 기록한다. 릴리즈 직전에만 `include_author_credit`, `omit_author_credit`, `custom_credit` 중 하나를 명시적으로 확인하고 `release_stage: pre_release`와 `confirmed_by`를 채운다. `custom_credit`에는 표기 문구와 위치가 필요하다. 모델·도구 provider, source provenance, output brand는 저자 표기와 다른 필드이며 자동 변환하지 않는다.
 
 ## Future human-feedback question bank
 

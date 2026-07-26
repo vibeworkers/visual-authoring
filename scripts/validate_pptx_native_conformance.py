@@ -55,6 +55,8 @@ CORE_CAPABILITIES = {
     "media",
 }
 ALLOWED_CAPABILITY_STATUSES = {"used", "intentionally_not_used", "not_applicable"}
+TITLE_SOURCE_PLACEHOLDER = "native_title_placeholder"
+TITLE_SOURCE_NAMED_SHAPE = "named_native_shape"
 REQUIRED_INTENTIONAL_SETTINGS = {
     "slide_size",
     "theme_font",
@@ -431,6 +433,51 @@ def validate_contract(contract: Any) -> list[dict[str, Any]]:
             findings.append(finding("CONTRACT_SECTIONS", "navigation.sections must be a non-empty list"))
         if not isinstance(navigation.get("toc_entries"), list) or not navigation.get("toc_entries"):
             findings.append(finding("CONTRACT_TOC", "navigation.toc_entries must be a non-empty list"))
+        catalog_entries = {
+            item.get("id"): item
+            for item in catalog
+            if isinstance(item, dict) and item.get("id")
+        } if isinstance(catalog, list) else {}
+        title_placeholder_used = catalog_entries.get("title_placeholder", {}).get("status") == "used"
+        outline_navigation_used = catalog_entries.get("outline_navigation", {}).get("status") == "used"
+        if outline_navigation_used and not title_placeholder_used:
+            title_source = navigation.get("title_source")
+            if not isinstance(title_source, dict):
+                findings.append(
+                    finding(
+                        "CONTRACT_TITLE_SOURCE",
+                        "when title_placeholder is not used, navigation.title_source must declare the named native title shape route",
+                    )
+                )
+            else:
+                if title_source.get("mode") != TITLE_SOURCE_NAMED_SHAPE:
+                    findings.append(
+                        finding(
+                            "CONTRACT_TITLE_SOURCE_MODE",
+                            f"title_source.mode must be {TITLE_SOURCE_NAMED_SHAPE!r} when title_placeholder is not used",
+                        )
+                    )
+                if not str(title_source.get("object_name_prefix", "")).strip():
+                    findings.append(
+                        finding(
+                            "CONTRACT_TITLE_SOURCE_NAME",
+                            "named native title source needs a non-empty object_name_prefix",
+                        )
+                    )
+                if not str(title_source.get("reason", "")).strip():
+                    findings.append(
+                        finding(
+                            "CONTRACT_TITLE_SOURCE_REASON",
+                            "named native title source needs the source-level reason for not using title_placeholder",
+                        )
+                    )
+            if catalog_entries.get("native_text_in_shapes", {}).get("status") != "used":
+                findings.append(
+                    finding(
+                        "CONTRACT_NATIVE_TITLE_SHAPE_CAPABILITY",
+                        "named native title shapes require native_text_in_shapes to be used",
+                    )
+                )
 
     slide_number = contract.get("slide_number")
     if not isinstance(slide_number, dict) or slide_number.get("mode") != "automatic_powerpoint":
@@ -536,18 +583,67 @@ def validate_observations(contract: dict[str, Any], observed: dict[str, Any]) ->
                     )
 
     slides = observed["slides"]
+    navigation = contract["navigation"]
+    declared_title_source = navigation.get("title_source")
+    if not isinstance(declared_title_source, dict):
+        declared_title_source = {}
+    if is_used("title_placeholder"):
+        title_source_mode = TITLE_SOURCE_PLACEHOLDER
+        title_source_label = "native title placeholder"
+        title_frames_by_slide = {
+            index: [frame for frame in slide["text_frames"] if frame["is_title"]]
+            for index, slide in enumerate(slides, start=1)
+        }
+    else:
+        title_source_mode = declared_title_source.get("mode")
+        title_source_prefix = str(declared_title_source.get("object_name_prefix", "")).strip()
+        title_source_label = "declared named native title shape"
+        title_frames_by_slide = {
+            index: [
+                frame
+                for frame in slide["text_frames"]
+                if title_source_mode == TITLE_SOURCE_NAMED_SHAPE
+                and title_source_prefix
+                and str(frame["object_name"]).startswith(title_source_prefix)
+            ]
+            for index, slide in enumerate(slides, start=1)
+        }
     title_by_slide = {
-        index: " ".join(slide["titles"]).strip()
-        for index, slide in enumerate(slides, start=1)
+        index: " ".join(
+            " ".join(str(paragraph["text"]) for paragraph in frame["paragraphs"])
+            for frame in frames
+        ).strip()
+        for index, frames in title_frames_by_slide.items()
     }
     if is_used("title_placeholder"):
-        missing_titles = [number for number, text in title_by_slide.items() if not text]
+        missing_titles = [
+            number
+            for number, frames in title_frames_by_slide.items()
+            if len(frames) != 1 or not title_by_slide[number]
+        ]
         if missing_titles:
             findings.append(
                 finding(
                     "PPTX_TITLE_PLACEHOLDER_MISSING",
-                    "each slide needs a native title placeholder with visible text",
+                    "each slide needs exactly one native title placeholder with visible text",
                     evidence={"slides": missing_titles},
+                )
+            )
+    elif title_source_mode == TITLE_SOURCE_NAMED_SHAPE:
+        invalid_named_titles = [
+            {
+                "slide_number": number,
+                "matched_object_names": [frame["object_name"] for frame in frames],
+            }
+            for number, frames in title_frames_by_slide.items()
+            if len(frames) != 1 or not title_by_slide[number]
+        ]
+        if invalid_named_titles:
+            findings.append(
+                finding(
+                    "PPTX_NAMED_NATIVE_TITLE_SHAPE_INVALID",
+                    "each slide needs exactly one visible native text shape matching navigation.title_source.object_name_prefix",
+                    evidence={"slides": invalid_named_titles},
                 )
             )
 
@@ -620,7 +716,6 @@ def validate_observations(contract: dict[str, Any], observed: dict[str, Any]) ->
                     )
                 )
 
-    navigation = contract["navigation"]
     if is_used("outline_navigation"):
         if not observed["section_list_present"]:
             findings.append(
@@ -658,8 +753,13 @@ def validate_observations(contract: dict[str, Any], observed: dict[str, Any]) ->
                 findings.append(
                     finding(
                         "PPTX_TITLE_SEQUENCE_MISMATCH",
-                        "declared title story must match the native title placeholder text",
-                        evidence={"slide_number": number, "declared": title, "observed": title_by_slide.get(number, "")},
+                        "declared title story must match the selected native title text",
+                        evidence={
+                            "slide_number": number,
+                            "declared": title,
+                            "observed": title_by_slide.get(number, ""),
+                            "title_source": title_source_label,
+                        },
                     )
                 )
         section_starts = [item.get("start_slide") for item in navigation.get("sections", []) if isinstance(item, dict)]
@@ -759,9 +859,15 @@ REMEDIATION_ACTIONS = {
     "PPTX_MASTER_LAYOUT_THEME_MISSING": "Build master, layout, and theme parts from the source template before emitting slides.",
     "PPTX_THEME_FONT_MISMATCH": "Set major/minor Latin and East Asian theme fonts to the declared Pretendard family in the source builder.",
     "PPTX_TITLE_PLACEHOLDER_MISSING": "Emit a native title placeholder and visible title for every slide from the outline title sequence.",
+    "CONTRACT_TITLE_SOURCE": "Declare navigation.title_source with the named native title-shape route before rebuilding the candidate.",
+    "CONTRACT_TITLE_SOURCE_MODE": "Use navigation.title_source.mode=named_native_shape when the title placeholder is intentionally not used.",
+    "CONTRACT_TITLE_SOURCE_NAME": "Declare the semantic object_name_prefix used by one native title shape on every slide.",
+    "CONTRACT_TITLE_SOURCE_REASON": "Record the source-level reason for using a named native title shape instead of a title placeholder.",
+    "CONTRACT_NATIVE_TITLE_SHAPE_CAPABILITY": "Set native_text_in_shapes to used before relying on named native title shapes.",
+    "PPTX_NAMED_NATIVE_TITLE_SHAPE_INVALID": "Emit exactly one visible native text shape matching navigation.title_source.object_name_prefix per slide.",
     "PPTX_AUTOMATIC_SLIDE_NUMBER_MISSING": "Add a native slide-number placeholder or field at the master/layout level; remove manually typed page numbers.",
     "PPTX_NATIVE_SECTION_LIST_MISSING": "Generate the PowerPoint section list from navigation.sections rather than only drawing section labels.",
-    "PPTX_TITLE_SEQUENCE_MISMATCH": "Update the outline and native title placeholders together so their ordered title story matches.",
+    "PPTX_TITLE_SEQUENCE_MISMATCH": "Update the outline and the declared native title source together so their ordered title story matches.",
     "PPTX_TITLE_SEQUENCE_LENGTH": "Regenerate navigation.title_sequence after slide insertion, deletion, or reorder.",
     "PPTX_TOC_ENTRY_MISSING": "Regenerate the native TOC text from the declared section sequence.",
     "PPTX_TEXT_VERTICAL_ALIGNMENT": "Set a:bodyPr@anchor to ctr for the affected source text shape, or declare a named exception with a reason.",
@@ -920,6 +1026,20 @@ def contract_fixture() -> dict[str, Any]:
     }
 
 
+def named_native_shape_contract_fixture() -> dict[str, Any]:
+    contract = contract_fixture()
+    for item in contract["capability_catalog"]:
+        if item["id"] == "title_placeholder":
+            item["status"] = "intentionally_not_used"
+            item["decision_reason"] = "fixture verifies a named native title shape route"
+    contract["navigation"]["title_source"] = {
+        "mode": TITLE_SOURCE_NAMED_SHAPE,
+        "object_name_prefix": "Title: ",
+        "reason": "fixture verifies the source-level alternative to a title placeholder",
+    }
+    return contract
+
+
 def shape_xml(name: str, text: str, *, title: bool = False, vertical_anchor: str = "ctr", horizontal_alignment: str = "ctr") -> str:
     placeholder = '<p:ph type="title"/>' if title else ""
     return f"""
@@ -931,7 +1051,7 @@ def shape_xml(name: str, text: str, *, title: bool = False, vertical_anchor: str
     """
 
 
-def write_fixture_pptx(path: Path, *, vertical_anchor: str = "ctr") -> None:
+def write_fixture_pptx(path: Path, *, vertical_anchor: str = "ctr", title_placeholder: bool = True) -> None:
     content_types = """<?xml version="1.0" encoding="UTF-8"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/></Types>"""
     root_rels = """<?xml version="1.0" encoding="UTF-8"?>
@@ -949,9 +1069,9 @@ def write_fixture_pptx(path: Path, *, vertical_anchor: str = "ctr") -> None:
     theme = """<?xml version="1.0" encoding="UTF-8"?>
 <a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="Pretendard Theme"><a:themeElements><a:fontScheme name="Pretendard Variable"><a:majorFont><a:latin typeface="Pretendard Variable"/><a:ea typeface="Pretendard Variable"/></a:majorFont><a:minorFont><a:latin typeface="Pretendard Variable"/><a:ea typeface="Pretendard Variable"/></a:minorFont></a:fontScheme></a:themeElements></a:theme>"""
     slide1 = f"""<?xml version="1.0" encoding="UTF-8"?>
-<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr/><p:grpSpPr/>{shape_xml('Title: Start with the reader', 'Start with the reader', title=True, vertical_anchor=vertical_anchor)}</p:spTree></p:cSld></p:sld>"""
+<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr/><p:grpSpPr/>{shape_xml('Title: Start with the reader', 'Start with the reader', title=title_placeholder, vertical_anchor=vertical_anchor)}</p:spTree></p:cSld></p:sld>"""
     slide2 = f"""<?xml version="1.0" encoding="UTF-8"?>
-<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr/><p:grpSpPr/>{shape_xml('Title: Follow the route', 'Follow the route', title=True)}{shape_xml('TOC: Opening', 'Opening')}</p:spTree></p:cSld></p:sld>"""
+<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr/><p:grpSpPr/>{shape_xml('Title: Follow the route', 'Follow the route', title=title_placeholder)}{shape_xml('TOC: Opening', 'Opening')}</p:spTree></p:cSld></p:sld>"""
     slide_rel = """<?xml version="1.0" encoding="UTF-8"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/></Relationships>"""
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -977,25 +1097,32 @@ def self_test() -> int:
     with tempfile.TemporaryDirectory(prefix="pptx-native-conformance-") as directory:
         root = Path(directory)
         contract_path = root / "contract.json"
+        named_shape_contract_path = root / "named-shape-contract.json"
         valid_pptx = root / "valid.pptx"
+        named_shape_pptx = root / "named-shape-valid.pptx"
         invalid_pptx = root / "invalid.pptx"
         write_json(contract_path, contract_fixture())
+        write_json(named_shape_contract_path, named_native_shape_contract_fixture())
         write_fixture_pptx(valid_pptx)
+        write_fixture_pptx(named_shape_pptx, title_placeholder=False)
         write_fixture_pptx(invalid_pptx, vertical_anchor="t")
         valid_report, _ = validate(valid_pptx, contract_path)
+        named_shape_report, _ = validate(named_shape_pptx, named_shape_contract_path)
         invalid_report, invalid_plan = validate(invalid_pptx, contract_path)
         valid_ok = valid_report["status"] == "pass_local"
+        named_shape_ok = named_shape_report["status"] == "pass_local"
         invalid_codes = {item["code"] for item in invalid_report["findings"]}
         invalid_ok = invalid_report["status"] == "repair_required" and "PPTX_TEXT_VERTICAL_ALIGNMENT" in invalid_codes
         output = {
-            "status": "pass_local" if valid_ok and invalid_ok else "fail",
+            "status": "pass_local" if valid_ok and named_shape_ok and invalid_ok else "fail",
             "valid_status": valid_report["status"],
+            "named_shape_status": named_shape_report["status"],
             "invalid_status": invalid_report["status"],
             "invalid_codes": sorted(invalid_codes),
             "source_mutation_only": invalid_plan.get("source_mutation_only"),
         }
         print(json.dumps(output, ensure_ascii=False, indent=2))
-        return 0 if valid_ok and invalid_ok else 1
+        return 0 if valid_ok and named_shape_ok and invalid_ok else 1
 
 
 def main() -> int:

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.1-portable-audit",
+  "generated_at": "2026-07-03T16:01:57.458Z",
+  "target_root": "/Volumes/Extend/.codex-relocated/skills/document-slide-authoring-agent-system",
+  "status": "fail",
+  "passed": 0,
+  "failed": 1,
+  "release_readiness": "blocked_structure",
+  "checks": [
+    {
+      "name": "system file exists",
+      "status": "fail",
+      "details": {
+        "path": "/Volumes/Extend/.codex-relocated/skills/document-slide-authoring-agent-system/authoring-agent-system.json"
+      }
+    }
+  ],
+  "evidence_summary": {
+    "present": [],
+    "missing_or_manual": []
+  },
+  "recommendations": []
+}

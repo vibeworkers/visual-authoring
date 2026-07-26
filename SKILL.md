@@ -20,9 +20,11 @@ description: >
 metadata:
   display-name: Visual Authoring
   short-description: Fixed-system, scene-centered visuals with proof-safe reflow
-  cogarch-role: visual-authoring-canonical
+  license: CC-BY-NC-4.0
+  cogarch-role: global-visual-authoring
+  cogarch-canonical-location: ~/.cogarch/skills/visual-authoring/
   runtime-compatibility: runtime-delta implemented
-  source-kind: merged canonical skill
+  source-kind: merged global canonical skill
 ---
 
 # visual-authoring
@@ -119,7 +121,7 @@ metadata:
 2. **원본/이전 작업 처리**: 원본 또는 이전 산출물이 있으면 `continue_improve`(이어서 개선)와 `fresh_start`(새로 시작) 중 하나를 반드시 확인한다. 원본이 없을 때만 `not_applicable_no_existing_work`로 기록한다.
 3. **전략 선택**: 열려 있는 전략 축마다 최소 두 개의 후보를 만든다. 각 후보는 `imagegen`으로 만든 시각 콘셉트 이미지와, 목표 매체 전체를 대표하는 실제 렌더 화면을 함께 제시한다. 사용자는 후보를 비교해 선택하거나 재탐색을 요청한다. 이미지 생성이나 전체 렌더를 만들 수 없으면 선택을 가장하지 않고 `blocked_preview_generation`으로 멈춘다.
 4. **색상 선택**: 팔레트 이름이나 색상칩만 보여 주지 않는다. 같은 콘텐츠·같은 정보량으로 만든 **완전한 UI/슬라이드/문서 화면**을 후보별로 보여 준다. 필요한 모든 표면(기본, 상태/오류, 데이터·읽기·행동 표면 등)은 `required_surface_ids`로 먼저 정하고, 각 후보가 모두 덮는지 비교한다. HCI 기준인 대비·가독성·주의 계층·상태 의미·색각 다양성·감정적 톤을 평이한 질문으로 안내한 뒤 사용자 선택을 받는다.
-5. **릴리즈 저자 표기**: 릴리즈 직전 `include_author_credit`, `omit_author_credit`, `custom_credit` 중 하나를 확인한다. 저자명·역할·표기 위치가 주어지지 않으면 임의로 넣거나 빼지 않는다.
+5. **릴리즈 저자 표기**: 릴리즈 직전 `include_author_credit`, `omit_author_credit`, `custom_credit` 중 하나를 확인한다. 아직 릴리즈 게이트 전이면 `pending_release_decision`으로 남기며 선택을 앞당겨 추정하지 않는다. 저자명·역할·표기 위치가 주어지지 않으면 임의로 넣거나 빼지 않는다.
 6. **향후 사람 피드백**: 현재 `human_feedback_mode: off`를 유지한다. 다만 나중에 사용자가 켜면 쓸 수 있도록 7점 리커트 문항과 자유응답 문항을 `references/user-decision-and-feedback.md`에서 제공한다. 이 문항은 피드백을 수집하기 위한 도구이지, 사람 이해·행동 변화를 이미 입증하는 증거가 아니다.
 7. **도구·기능 구현**: 필요한 기능을 프롬프트 지시로만 남기지 않는다. image concept은 `imagegen`, 목표 매체 렌더는 코드 renderer, 웹 UI의 전체 표면 확인은 portable browser adapter의 URL·screenshot·DOM/상태 증거로 실행한다. Python이 없으면 `scripts/visual-authoring-runtime`이 OS 패키지 관리자로 설치를 시도한 뒤 실행한다. browser 또는 image converter가 없으면 runtime은 알려진 OS 패키지 관리자만 사용해 `설치 계획 → 설치 시도 → 재탐색 → 원래 작업 재시도` 순서로 처리한다. 설치를 끄거나 권한·네트워크·패키지 관리자가 없을 때는 `dependency_installation_*` JSON에 실행 가능한 명령·이유를 남긴다. 발견된 browser가 capture를 끝내지 못하면 안전한 profile·발견 후보를 제한적으로 재시도하고, 모두 실패하면 `browser_runtime_failed`와 실행 기록을 남긴다. host browser의 URL 정책이 막은 경우에는 우회하지 않고 `blocked_tool_runtime`으로 닫는다. 기능이나 증거를 가정해서 통과시키지 않는다.
 
@@ -557,7 +559,7 @@ localization_reflow_packet:
 
 PPTX는 `Native Medium Capability Scan` → `native-object-intent-plan.json` → 빌드 → `native-object-audit.json` 순서로 닫는다. intent plan은 의미 단위마다 `semantic_role`, `criticality`, `native_requirement`, `expected_native_type`, semantic object name, edit boundary, group/z-order/read-order, geometry relations, presentation behavior, raster exception을 기록한다. detailed schema와 계산식은 `references/pptx-native-object-authoring.md`.
 
-Fixed 감사는 PPTX와 intent plan의 SHA-256을 기록하고 `out_of_bounds_non_bleed_count`, `unintended_overlap_count`, `max_alignment_error_pt`, `max_spacing_deviation_ratio`, `detached_required_connector_count`, `object_density`, native/critical/relation coverage를 계산한다. critical blocker는 missing/type/relation/read-order와 의도하지 않은 bounds/overlap/connector 위반이 하나도 없어야 한다. 분모가 없으면 full coverage로 간주하지 않고 `not_applicable`로 기록한다.
+Fixed 감사는 PPTX와 intent plan의 SHA-256을 기록하고 `out_of_bounds_non_bleed_count`, `unintended_overlap_count`, `unplanned_text_overlap_count`, `max_alignment_error_pt`, `max_spacing_deviation_ratio`, `detached_required_connector_count`, `object_density`, native/critical/relation coverage를 계산한다. critical blocker는 missing/type/relation/read-order와 의도하지 않은 bounds/overlap/connector 위반, 그리고 선언하지 않은 native text-to-text 겹침이 하나도 없어야 한다. 의도적인 텍스트 겹침은 두 object name과 이유를 모두 적은 `overlap_exceptions`로만 허용한다. 분모가 없으면 full coverage로 간주하지 않고 `not_applicable`로 기록한다.
 
 프로젝트별 의미 그룹·목표 간격·tolerance·noncritical coverage·raster exception은 Flexible이다. 코드는 그 의도값에 대한 편차를 계산하지, 모든 객체를 같은 간격으로 만들거나 “미적 점수”를 만들지 않는다. Decisional 상태는 `pass_local | revise | blocked | needs_human_choice`이며 fixed 관찰, content-fit 판단, render/native/human 증거 trace를 함께 남긴다.
 
@@ -572,7 +574,7 @@ Fixed 감사는 PPTX와 intent plan의 SHA-256을 기록하고 `out_of_bounds_no
 기본 규약은 다음과 같다.
 
 - theme의 major/minor Latin·East Asian 기본 글꼴은 Pretendard 계열이다. 글꼴을 이미지로 연출해야 할 때만 raster exception과 동등 텍스트를 남긴다.
-- 제목은 native title placeholder, 개요는 native section list와 TOC native text, 쪽번호는 `automatic_powerpoint` placeholder/field를 쓴다. 일반 텍스트로 번호를 입력하지 않는다.
+- 제목은 기본적으로 native title placeholder를 쓴다. custom layout에서 placeholder가 source 단계의 회복 위험을 만들면 `title_placeholder: intentionally_not_used`와 `navigation.title_source`에 이름 있는 native text shape의 prefix·이유를 적고, 매 슬라이드 한 개씩 검증한다. 개요는 native section list와 TOC native text, 쪽번호는 `automatic_powerpoint` placeholder/field를 쓴다. 일반 텍스트로 번호를 입력하지 않는다.
 - 도형 안의 기본 text는 `a:pPr@algn=ctr`와 `a:bodyPr@anchor=ctr`으로 가운데/중간 정렬한다. 왼쪽 정렬 같은 예외는 semantic object name과 이유를 contract에 적는다.
 - 사진적 장면·복잡한 일러스트·수정 가치가 낮은 시각화는 image layer로 둘 수 있다. 다만 모든 picture는 semantic role, image 필요 이유, equivalent text를 가진 raster exception으로 등록한다. 의미 라벨·화살표·순서는 native layer가 소유한다.
 - 제목을 순서대로 읽었을 때 문서의 방향이 드러나도록 `direction_statement`, ordered `sections`, `title_sequence`, `toc_entries`를 source에 둔다. 순서나 문구가 바뀌면 TOC/section/title/쪽번호 증거를 stale 처리한다.
@@ -778,9 +780,9 @@ VLPP와 LLM의 통합 결과는 산출물의 합격 등급이나 독자 성과 �
 | `visual-implementation` | `merge` | Phase 4 Mode L/A로 이관, tokens/section/motion/checklist references 이관 |
 | `geo-carbon-visual-integrator` | `merge` | Phase 4 Mode V + label-masked/scene-layer로 이관, `references/visual-semantic-encoding.md` |
 
-원본 5개 SKILL.md는 provenance 스냅샷으로 `_absorbed/`에 read-only 보존(스킬로 노출 안 됨). 5개 옛 이름을 참조하던 다른 스킬은 `visual-authoring`로 갱신했다(sweep 로그는 검증 증거 참조). CLI 도구·외부 SoT 문서는 원위치 유지(route). 한 화면 안에 두 토큰 시스템을 부활시키지 않는다.
+원본 5개는 `_absorbed/`에 `SKILL.provenance.md` 이름의 read-only provenance 스냅샷으로 보존한다. 이 파일은 표준 스킬 탐색 entrypoint가 아니므로 활성 스킬로 노출하지 않는다. 5개 옛 이름을 참조하던 다른 스킬은 `visual-authoring`로 갱신했다(sweep 로그는 검증 증거 참조). CLI 도구·외부 SoT 문서는 원위치 유지(route). 한 화면 안에 두 토큰 시스템을 부활시키지 않는다.
 
-검증 경계: `_absorbed/` 아래 파일은 active runtime skill이 아니라 보존 증거다. 이 하위 스냅샷에 `agents/openai.yaml` 또는 현재 형식의 `Rubric (Must/Should)`가 없어도 직접 보강하지 않는다. active 검증과 라우팅은 이 `visual-authoring/SKILL.md`와 references/scripts에서 수행하고, 스냅샷 누락은 `read_only_provenance_exempt`로 기록한다.
+검증 경계: `_absorbed/` 아래 파일은 active runtime skill이 아니라 보존 증거다. 이 하위 스냅샷에 `openai.provenance.yaml` 또는 현재 형식의 `Rubric (Must/Should)`가 없어도 직접 보강하지 않는다. active 검증과 라우팅은 이 `visual-authoring/SKILL.md`와 references/scripts에서 수행하고, 스냅샷 누락은 `read_only_provenance_exempt`로 기록한다.
 
 ---
 
@@ -823,6 +825,7 @@ Shared portable core 하나를 유지하고 Codex/Claude/Gemini 차이는 runtim
 - 흡수 원형: `document-slide-authoring-agent-system`, `ggaca-authoring`(원형 2026-05 의도적 수익 체계론×fitCrafting 통합 사이클), `universal-visual-vlc`, `visual-implementation`(frontend-skill+frontend-carbon 후속), `geo-carbon-visual-integrator`. 스냅샷은 `_absorbed/`.
 - 대상 프로젝트·산출물은 자체 product/domain SoT를 유지한다. 본 스킬은 시각 저작 파이프라인·라우팅·검증 계약만 소유.
 - 하위 프로젝트가 더 엄격한 라이선스·콘텐츠·권한 규칙을 가지면 그 표면이 본 계약보다 우선.
+- 이 디렉터리의 원저작물은 별도 표기가 없는 한 `LICENSE`의 CC BY-NC 4.0을 따른다. 제3자 원본·상표·인물·생성 이미지에는 자동 적용하지 않으며, 해당 권리를 별도로 기록한다.
 
 ---
 
@@ -832,6 +835,7 @@ Shared portable core 하나를 유지하고 Codex/Claude/Gemini 차이는 runtim
 |---|---|
 | `references/glossary.md` | 용어 확인 |
 | `references/concept-map.md` | 정보 관계·Markdown 문서 토폴로지·검증 경로 확인 |
+| `references/visual-authoring-identity.md` | 스킬 자체를 대표하는 프로필·키비주얼의 의미·생성·권리 경계 확인 |
 | `references/source-first-regeneration.md` | 원본 기반 재생성/이관, source parity, 편집 가능성 판단 |
 | `references/pptx-native-object-authoring.md` | PPTX native object intent, geometry relations, semantic coverage, threshold/waiver/evidence 경계 |
 | `references/pptx-native-conformance-and-self-remediation.md` | PowerPoint 기능별 intentional status, Pretendard theme, outline/automatic slide number/text alignment/raster exception, source-level self-remediation |
@@ -901,8 +905,8 @@ Shared portable core 하나를 유지하고 Codex/Claude/Gemini 차이는 runtim
 - `Scene Specificity Gate`가 생성 이미지/하이브리드 경로에서 구체 인물·공간·사물·행동·통합 계획을 확인한다. — Evidence: `references/review-gate.md` + prompt ledger.
 - label-masked 판독 미통과 시 완료 금지, 사람 실측 전 human-outcome 확정 금지. — Evidence: Phase 4/5 + checklist.
 - 생성 이미지 사용 시 prompt ledger(model/prompt/output_path/integration_path/verification) 존재. — Evidence: 산출물/검증 로그 grep.
-- `PowerPoint Native Object Intent / Geometry / Semantic Coverage Contract` 섹션 존재. Mode S는 intent plan과 exact PPTX hash의 audit, critical exact-zero blocker, critical/relation coverage를 닫고 geometry proxy를 quality/human proof로 승격하지 않는다. — Evidence: intent/audit JSON + `references/pptx-native-object-authoring.md`.
-- `PowerPoint Native Conformance and Source-Level Self-Remediation Gate` 섹션 존재. Mode S는 모든 core PowerPoint capability를 intentional status와 reason으로 닫고, Pretendard theme font, native title/section/TOC/automatic slide number, named text-alignment exception, raster exception을 exact PPTX에서 검사한다. 위반 시 report와 fresh-source repair plan만 만들며 recovery/normalized/conversion/UI-resave artifact를 source로 쓰지 않는다. — Evidence: `pptx-native-conformance-contract.json`, exact candidate report/repair-plan, `references/pptx-native-conformance-and-self-remediation.md`, `scripts/validate_pptx_native_conformance.py`.
+- `PowerPoint Native Object Intent / Geometry / Semantic Coverage Contract` 섹션 존재. Mode S는 intent plan과 exact PPTX hash의 audit, critical exact-zero blocker, `unplanned_text_overlap_count: 0`, critical/relation coverage를 닫고 geometry proxy를 quality/human proof로 승격하지 않는다. 의도적 text-on-text 표현은 named-pair와 reason이 있는 exception만 허용한다. — Evidence: intent/audit JSON + `references/pptx-native-object-authoring.md`.
+- `PowerPoint Native Conformance and Source-Level Self-Remediation Gate` 섹션 존재. Mode S는 모든 core PowerPoint capability를 intentional status와 reason으로 닫고, Pretendard theme font, native title placeholder 또는 계약된 named native title shape, section/TOC/automatic slide number, named text-alignment exception, raster exception을 exact PPTX에서 검사한다. 위반 시 report와 fresh-source repair plan만 만들며 recovery/normalized/conversion/UI-resave artifact를 source로 쓰지 않는다. — Evidence: `pptx-native-conformance-contract.json`, exact candidate report/repair-plan, `references/pptx-native-conformance-and-self-remediation.md`, `scripts/validate_pptx_native_conformance.py`.
 - `PPTX Native Runtime Receipt Gate` 섹션 존재. exact candidate hash, fresh PowerPoint process, recovery dialog 부재, ordered full-slide review, gate에 이름으로 지정한 editable object의 save/reopen round-trip을 별도 observation으로 기록하고 receipt validator만 status를 계산한다. `pass_native_first_open_pending_release`는 release pass가 아니며, recovery/hash mismatch/recorded round-trip 실패는 source-level fresh-family remediation으로 이어진다. — Evidence: `*.powerpoint-native-gate.json`, observation JSON, `references/pptx-native-runtime-evidence.md`, `scripts/validate_pptx_native_runtime_receipt.py`.
 - Mode S는 outline notes 선행 + `Native Medium Capability Scan` + fresh PPTX open check를 rebuild-stale 규칙과 함께 별도 게이트로. — Evidence: `references/slide-authoring.md`.
 - `PPTX Pattern Compiler and Evidence-Separation Gate`가 존재한다. 복구·normalized·conversion·UI-resave PPTX는 후속 후보의 source family가 될 수 없고, fresh manifest가 pattern route와 recovery-lineage 거절을 검사한다. 구조·읽기·보기·native runtime 증거는 네 장부로 분리한다. — Evidence: `references/pptx-pattern-compiler-and-evidence-separation.md` + `scripts/validate_pptx_pattern_compiler_manifest.py`.
@@ -943,7 +947,7 @@ Shared portable core 하나를 유지하고 Codex/Claude/Gemini 차이는 runtim
 1. `generate-skill/scripts/quick_validate.py`와 `generate-skill/scripts/audit_three_layer_separation.py`로 `visual-authoring/` 검증 통과.
 2. Source role/Phase 순서/Content-Fit hierarchy/3축 선택/claim 3분리 grep 확인.
 3. Visual Strategy & Expression Select 기록(콘텐츠 전략/표현 시스템/매체 구현/선택·거절/no-default) 존재.
-4. PPTX 경로는 `scripts/audit_pptx_native_objects.py --self-test`와 실제 deck+intent audit를 실행하고 hash·blocker·coverage 확인.
+4. PPTX 경로는 `scripts/audit_pptx_native_objects.py --self-test`와 실제 deck+intent audit를 실행하고 hash·blocker·coverage와 `unplanned_text_overlap_count: 0`을 확인한다. 이 항목이 실패하면 PPTX를 patch하지 않고 원본 배치 코드를 고쳐 새 후보를 만든다.
 4a. 새 PPTX family는 `scripts/visual-authoring-runtime run scripts/validate_pptx_pattern_compiler_manifest.py <manifest>`와 `--self-test`를 통과하고, recovery/normalization/conversion lineage가 source family에 없는지 확인한다. static/read/render/native 네 evidence ledger를 별도로 보고한다.
 4b. 새 PPTX family는 `pptx-native-conformance-contract.json`을 만들고 `scripts/visual-authoring-runtime run scripts/validate_pptx_native_conformance.py --self-test`와 실제 deck conformance audit를 실행한다. capability status/reason, Pretendard theme, title/section/TOC/automatic slide number, default center/middle shape text, named exceptions, raster exception, source-only repair plan을 확인한다.
 4c. PowerPoint native-runtime을 주장하면 `*.powerpoint-native-gate.json`과 별도 observation JSON을 만들고 `scripts/visual-authoring-runtime run scripts/validate_pptx_native_runtime_receipt.py --self-test` 및 exact candidate receipt를 실행한다. first-open only는 `pass_native_first_open_pending_release`로 기록하고, full review/edit round-trip 전에는 release pass로 합치지 않는다. 이 패키지는 PowerPoint UI를 조작하지 않으므로 native action-binding static audit은 해당 구현이 추가될 때만 적용한다.

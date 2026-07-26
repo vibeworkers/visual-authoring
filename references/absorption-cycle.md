@@ -1,7 +1,7 @@
 # Absorption Cycle — Phase 0 상세 (GGACA)
 
 규칙으로 잠그고, 정본 어휘로 외부 자산을 흡수하며, 9단계 게이트를 사이클로 닫는 집필 방법론.
-원형은 `ggaca-authoring` 스킬 (전문 스냅샷: `../_absorbed/ggaca-authoring/SKILL.md`).
+원형은 `ggaca-authoring` 스킬 (전문 스냅샷: `../_absorbed/ggaca-authoring/SKILL.provenance.md`).
 GGACA = Governance-Gated Absorption Cycle Authoring, 한글 명칭 "규칙-흡수-사이클 집필법".
 
 GGACA는 본문을 쓰지 않는다 — 어휘 규칙·게이트·라우팅만 잠근다. 본문·빌드·렌더링·검증은 specialist lane이 소유한다.
@@ -110,5 +110,5 @@ GGACA는 본문을 쓰지 않는다 — 어휘 규칙·게이트·라우팅만 �
 
 - 원형: 2026-05-18~20 의도적 수익 체계론 × fitCrafting 통합 교과서 사이클.
 - 일반화: 2026-05-20 `ops/cogarch_integration_cycle_pattern_20260520.md` → `ggaca-authoring` 스킬.
-- 본 문서: 2026-07-07 `visual-authoring` Phase 0으로 흡수. 원문 스냅샷 `../_absorbed/ggaca-authoring/SKILL.md`.
-- 원형 스킬이 참조하던 `references/gates.md` 등 하위 문서는 배포본에 존재하지 않았다 — SKILL.md 스냅샷이 완결 정본이다.
+- 본 문서: 2026-07-07 `visual-authoring` Phase 0으로 흡수. 원문 스냅샷 `../_absorbed/ggaca-authoring/SKILL.provenance.md`.
+- 원형 스킬이 참조하던 `references/gates.md` 등 하위 문서는 배포본에 존재하지 않았다 — provenance 스냅샷이 완결 정본이다.

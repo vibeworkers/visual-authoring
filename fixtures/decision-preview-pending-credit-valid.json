@@ -1,0 +1,88 @@
+{
+  "schema_version": "visual-authoring.decision-preview.v1",
+  "goal_confirmation": {
+    "status": "confirmed",
+    "goal": "초안 단계의 시각 자료를 만든다",
+    "audience": "검토자",
+    "output_surface": "pptx",
+    "success_condition": "사용자 선택과 미결정 릴리즈 항목을 분리해 기록한다",
+    "confirmed_by": "requester"
+  },
+  "source_continuity": {
+    "existing_work": "present",
+    "choice": "fresh_start",
+    "confirmed_by": "requester"
+  },
+  "progress": {
+    "display_mode": "step_by_step_progress_bar",
+    "closed_phases": ["phase_0", "phase_1", "phase_2", "phase_3"],
+    "current_phase": "phase_4"
+  },
+  "strategy_selection": {
+    "status": "user_selected",
+    "required_surface_ids": ["primary"],
+    "candidates": [
+      {
+        "id": "editorial",
+        "concept_preview_type": "image_generated",
+        "concept_preview_path": "decision-preview/editorial-concept.svg",
+        "target_surface_preview_path": "decision-preview/editorial-ui.svg",
+        "covered_surface_ids": ["primary"]
+      },
+      {
+        "id": "operational",
+        "concept_preview_type": "image_generated",
+        "concept_preview_path": "decision-preview/operational-concept.svg",
+        "target_surface_preview_path": "decision-preview/operational-ui.svg",
+        "covered_surface_ids": ["primary"]
+      }
+    ],
+    "selected_id": "editorial",
+    "confirmed_by": "requester"
+  },
+  "color_selection": {
+    "status": "user_selected",
+    "hci_criteria": ["contrast", "legibility", "attention_hierarchy", "state_semantics", "color_vision", "tone"],
+    "required_surface_ids": ["primary"],
+    "options": [
+      {
+        "id": "warm-neutral",
+        "complete_surface_preview_path": "decision-preview/warm-neutral-ui.svg",
+        "covered_surface_ids": ["primary"]
+      },
+      {
+        "id": "cool-contrast",
+        "complete_surface_preview_path": "decision-preview/cool-contrast-ui.svg",
+        "covered_surface_ids": ["primary"]
+      }
+    ],
+    "selected_id": "warm-neutral",
+    "confirmed_by": "requester"
+  },
+  "tooling_implementation": {
+    "status": "implemented",
+    "adapters": [
+      {
+        "capability": "concept_image",
+        "adapter": "imagegen",
+        "implementation": "tool_call",
+        "evidence_paths": ["decision-preview/editorial-concept.svg"]
+      },
+      {
+        "capability": "target_surface_render",
+        "adapter": "code_renderer",
+        "implementation": "code",
+        "evidence_paths": ["decision-preview/editorial-ui.svg"]
+      }
+    ]
+  },
+  "release_credit": {
+    "release_stage": "not_at_release_gate",
+    "choice": "pending_release_decision",
+    "decision_due": "release_gate"
+  },
+  "human_feedback": {
+    "mode": "off",
+    "questionnaire_reference": "references/user-decision-and-feedback.md#future-human-feedback-question-bank"
+  }
+}

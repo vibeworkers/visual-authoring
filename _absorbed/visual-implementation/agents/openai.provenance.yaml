@@ -1,0 +1,9 @@
+interface:
+  display_name: "Frontend Carbon"
+  short_description: "Carbon 토큰 + 프론트엔드 구성 원칙으로 랜딩 페이지/홍보 HTML 빌드"
+  default_prompt: >
+    Use $frontend-carbon to build a landing page.
+    Write visual thesis, content plan, and token plan before building.
+    Use --cds-* CSS variables from references/tokens-css.md.
+    Follow Hero → Support → Detail → CTA sequence.
+    Apply motion recipes. Verify with checklist C1-C9.
